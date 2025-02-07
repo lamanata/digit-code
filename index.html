@@ -6,7 +6,7 @@
     <title>Digit Code</title>
     <style>
         .top div {  
-          font-size: 40px;
+          font-size: 35px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -15,18 +15,53 @@
 
         .top div a {  
           color: #004d45;
-          font-size: 20px;
+          font-size: 18px;
           text-decoration: unset;
         } 
+.top {
+    background-color: #fcf6d6;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80px; /* Fix the height to prevent shifting */
+    padding: 10px 0;
+    overflow: hidden; /* Prevent content from affecting height */
+}
 
-        .top {
-          background-color: #fcf6d6;
-          width: 100%;
-          /* Add these to position .top at the top */
-          position: sticky; /* Or position: fixed; */
-          top: 0;
-          z-index: 1; /* Ensure .top is above other content */
-        }
+.top div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.store-link {
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.lang-buttons {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    display: flex;
+    gap: 5px; /* Space between buttons */
+}
+
+.lang-btn {
+    padding: 3px 6px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    white-space: nowrap; /* Prevents text from wrapping */
+    color: black;
+}
+
+
 
         body {
             background: #077b4c;
@@ -246,17 +281,37 @@
     margin-left: 10px;
     color: white;
 }
+
+.lang-btn { margin: 1px; cursor: pointer; padding: 1px 2px; border: 1px solid #ccc; }
+
+button:disabled {
+    background-color: #aaa; /* Greyed out */
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+
     </style>
 </head>
 <body>
-    <section class="top">
-      <div>DIGIT CODE</div>
-      <div><a href="https://smartstore.naver.com/playte">디지트 코드 구매 - Playte Store</a></div>
-    </section>
-    <div class="button-group">  <button onclick="revealDigits()">숫자 공개</button>
-        <button onclick="hideDigits()">숫자 숨기기</button>
-            <button onclick="generateRandomDigitsWithRules()">숫자 생성</button>
+<section class="top">
+    <div id="title"></div>
+    <div><a href="https://smartstore.naver.com/playte" id="store-link" class="store-link"></a></div>
+    <div class="lang-buttons">
+        <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+        <button class="lang-btn" onclick="changeLanguage('ko')">KO</button>
     </div>
+</section>
+
+
+
+
+    <div class="button-group">
+        <button onclick="revealDigits()" id="btn-reveal"></button>
+        <button onclick="hideDigits()" id="btn-hide"></button>
+        <button onclick="generateRandomDigitsWithRules()" id="btn-generate"></button>
+    </div>
+
     <div class="board" id="digit-board">
         <div class="digit" id="digit-1"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
         <div class="digit" id="digit-2"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
@@ -267,25 +322,30 @@
     </div>
 
 <div class="answer-input">
-    <label for="user-input">정답 입력:</label>
-    <input type="text" id="user-input" maxlength="6" pattern="\d{6}" placeholder="6자리 숫자">
-    <button onclick="checkUserInput()">맞춰보기</button>
+    <label for="user-input" id="label-answer"></label>
+    <input type="text" id="user-input" maxlength="6" pattern="\d{6}" placeholder="">
+    <button onclick="checkUserInput()" id="btn-check"></button>
     <span id="match-result"></span>
 </div>
 
-    <div class="question-input">
-        <select id="row-col-value">
-            <option value="A">A</option><option value="B">B</option><option value="C">C</option>
-            <option value="D">D</option><option value="E">E</option><option value="F">F</option>
-            <option value="G">G</option><option value="H">H</option><option value="I">I</option>
-            <option value="J">J</option><option value="K">K</option><option value="L">L</option>
-            <option value="M">M</option><option value="N">N</option><option value="O">O</option>
-            <option value="P">P</option><option value="Q">Q</option><option value="R">R</option>
-            <option value="S">S</option>
-        </select>
-        <label for="row-col-value">에는 몇 칸이 채워져 있나요?</label>
-        <button onclick="handleHowManyQuestion()">물어보기</button>
-    </div>
+
+<div class="question-input">
+    <select id="row-col-value">
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+        <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+        <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+        <option value="J">J</option><option value="K">K</option><option value="L">L</option>
+        <option value="M">M</option><option value="N">N</option><option value="O">O</option>
+        <option value="P">P</option><option value="Q">Q</option><option value="R">R</option>
+        <option value="S">S</option>
+    </select>
+    <label id="label-how-many"></label>
+    <button id="btn-ask" onclick="handleHowManyQuestion()"></button>
+</div>
+
+
+
+
 
 <div class="question-input">
     <select id="digit-value">
@@ -296,14 +356,14 @@
         <option value="X">(X)</option>
         <option value="Y">(Y)</option>
     </select>
-    <label for="digit-value">는 짝수 인가요 홀수 인가요?</label>
-
-    <button onclick="handleDigitEvenOddQuestion()">물어보기</button>
+    <label for="digit-value" id="label-even-odd"></label>
+    <button class="btn-ask" onclick="handleDigitEvenOddQuestion()"></button>
 </div>
 
+
+
 <div class="question-input">
-    <label for="digit-pair">다음 숫자중 어떤게 더 큰가요?</label>
-    <select id="digit-pair">
+      <select id="digit-pair">
         <option value="T-U">(T-U)</option>
         <option value="U-V">(U-V)</option>
         <option value="W-X">(W-X)</option>
@@ -312,27 +372,31 @@
         <option value="U-X">(U-X)</option>
         <option value="V-Y">(V-Y)</option>
     </select>
-    <button onclick="handleComparisonQuestion()">물어보기</button>
+    <label for="digit-pair" id="label-comparison"></label>
+
+    <button class="btn-ask" onclick="handleComparisonQuestion()"></button>
 </div>
 
+
+
 <div class="question-input">
-    <label for="column-value">열 </label>
-    <select id="column-value">
+      <select id="column-value">
         <option value="A">A</option><option value="B">B</option><option value="C">C</option>
         <option value="D">D</option><option value="E">E</option><option value="F">F</option>
         <option value="G">G</option><option value="H">H</option><option value="I">I</option>
     </select>
     
-    <label for="row-value">, 행 </label>
     <select id="row-value">
         <option value="J">J</option><option value="K">K</option><option value="L">L</option>
         <option value="M">M</option><option value="N">N</option><option value="O">O</option>
         <option value="P">P</option><option value="Q">Q</option><option value="R">R</option>
         <option value="S">S</option>
     </select>
-    <label for="row-value"> 칸은 채워져 있나요? </label>
-    <button onclick="handleSegmentFilledQuestion()">물어보기</button>
+    <label id="label-segment"></label>
+
+    <button class="btn-ask" onclick="handleSegmentFilledQuestion()"></button>
 </div>
+
 
 
 
@@ -342,6 +406,83 @@
      <div id="question-output"></div>
 
     <div class="question-output" id="question-output"></div>
+
+    <script id="translations" type="application/json">
+{
+    "en": {
+        "title": "DIGIT CODE",
+        "store-link": "Purchase DIGIT CODE - Playte Store",
+        "btn-reveal": "Reveal",
+        "btn-hide": "Hide",
+        "btn-generate": "Generate",
+        "label-answer": "Answer:",
+        "btn-check": "Check",
+        "placeholder-answer": "Enter a 6-digit number",
+        "msg-no-number": "No numbers generated!",
+        "msg-invalid-input": "Enter a 6-digit number!",
+        "msg-correct": "Correct!",
+        "msg-wrong": "Wrong!",
+        "msg-even": "Even",
+        "msg-odd": "Odd",
+        "msg-invalid-input-error": "Invalid Input!",
+        "msg-how-many": "How many spaces are filled in {letter}?",
+        "msg-answer-how-many": "Q: How many spaces are filled in {letter}? A: {count}",
+        "msg-even-odd-question": "Is it even or odd?",
+        "msg-even-odd-result": "Is ({digitLetter}) even or odd? {parity}.",
+        "msg-even-odd-history": "Q: Is {digitLetter} even or odd? A: {parity}.",
+        "msg-first-greater": "{firstDigit} is greater.",
+        "msg-second-greater": "{secondDigit} is greater.",
+        "msg-comparison-history": "Q: Which is greater, {firstDigit} or {secondDigit}? A: {resultText}",
+        "msg-invalid-selection": "Invalid selection.",
+        "msg-segment-filled": "Yes, it is filled.",
+        "msg-segment-empty": "No, it is empty.",
+        "msg-segment-question": "Q: Is {column}-{row} filled? A: {result}",
+        "msg-segment-history": "Q: Is {column}-{row} filled? A: {result}",
+        "label-how-many": "How many spaces are filled in {value}?",
+        "label-even-odd": "Is {digit} even or odd?",
+        "label-comparison": "Which is greater, {pair}?",
+        "label-segment": "Is ({column}, {row}) filled?",
+        "btn-ask": "Ask"
+    },
+    "ko": {
+        "title": "디지트 코드",
+        "store-link": "디지트 코드 구매 - Playte Store",
+        "btn-reveal": "공개",
+        "btn-hide": "숨기기",
+        "btn-generate": "생성",
+        "label-answer": "정답 입력:",
+        "btn-check": "맞춰보기",
+        "placeholder-answer": "6자리 숫자를 입력하세요",
+        "msg-no-number": "숫자가 생성되지 않았습니다!",
+        "msg-invalid-input": "6자리 숫자를 입력하세요!",
+        "msg-correct": "정답!",
+        "msg-wrong": "오답!",
+        "msg-even": "짝수",
+        "msg-odd": "홀수",
+        "msg-invalid-input-error": "잘못된 입력입니다!",
+        "msg-how-many": "{letter}에는 몇 칸이 채워져 있나요?",
+        "msg-answer-how-many": "Q: {letter}에는 몇 칸이 채워져 있나요? A: {count}",
+        "msg-even-odd-question": "짝수인가요 홀수인가요?",
+        "msg-even-odd-result": "({digitLetter})는 {parity}입니다.",
+        "msg-even-odd-history": "Q: {digitLetter}는 짝수인가요 홀수인가요? A: {parity}.",
+        "msg-first-greater": "{firstDigit} 가 더 큽니다.",
+        "msg-second-greater": "{secondDigit} 가 더 큽니다.",
+        "msg-comparison-history": "Q: {firstDigit} 와 {secondDigit} 중에 어떤게 더 큰가요? A: {resultText}",
+        "msg-invalid-selection": "잘못된 조합 선택 입니다.",
+        "msg-segment-filled": "네, 채워져 있습니다.",
+        "msg-segment-empty": "아니요, 빈칸 입니다.",
+        "msg-segment-question": "Q: {column}-{row} 는 채워져 있나요? A: {result}",
+        "msg-segment-history": "Q: {column}-{row} 는 채워져 있나요? A: {result}",
+        "label-how-many": "{value}에는 몇 칸이 채워져 있나요?",
+        "label-even-odd": "{digit}는 짝수인가요 홀수인가요?",
+        "label-comparison": "{pair} 중 어떤게 더 큰가요?",
+        "label-segment": "{column}, {row} 칸은 채워져 있나요?",
+        "btn-ask": "물어보기"
+    }
+}
+
+
+    </script>
 
     <script>
         let hiddenDigits = [];
@@ -370,31 +511,36 @@
                 document.querySelector(`#${digitId} .${segment}`).classList.add('on');
             });
         }
+function generateRandomDigitsWithRules() {
+    const lang = localStorage.getItem("language") || "en";
+    const translations = JSON.parse(document.getElementById('translations').textContent);
+    hiddenDigits = [];
+    numberGenerated = true;
+    setButtonsState(true);  // Enable buttons after generating numbers
 
-        function generateRandomDigitsWithRules() {
-            hiddenDigits = [];
-            numberGenerated = true;
-            const usedNumbers = Array(10).fill(0);
+    const usedNumbers = Array(10).fill(0);
+    for (let i = 0; i < 6; i++) {
+        let randomDigit;
+        do {
+            randomDigit = Math.floor(Math.random() * 10);
+        } while (
+            usedNumbers[randomDigit] === 2 ||
+            (i > 0 && hiddenDigits[i - 1] === randomDigit) ||
+            (i >= 3 && hiddenDigits[i - 3] === randomDigit)
+        );
+        hiddenDigits.push(randomDigit);
+        usedNumbers[randomDigit]++;
+    }
 
-            for (let i = 0; i < 6; i++) {
-                let randomDigit;
-                do {
-                    randomDigit = Math.floor(Math.random() * 10);
-                } while (
-                    usedNumbers[randomDigit] === 2 ||
-                    (i > 0 && hiddenDigits[i - 1] === randomDigit) ||
-                    (i >= 3 && hiddenDigits[i - 3] === randomDigit)
-                );
+    // Hide match result when new numbers are generated
+    document.getElementById("match-result").innerText = "";
+    document.getElementById("match-result").style.display = "hidden";
 
-                hiddenDigits.push(randomDigit);
-                usedNumbers[randomDigit]++;
-            }
+    document.querySelectorAll('.digit span').forEach(span => span.classList.remove('on'));
 
-            console.log("Hidden Digits Generated:", hiddenDigits);
-            document.getElementById('hidden-number').innerText = "Hidden Number: " + hiddenDigits.join('');
 
-            document.querySelectorAll('.digit span').forEach(span => span.classList.remove('on'));
-        }
+}
+
 
         function revealDigits() {
             if (!numberGenerated) return;
@@ -464,54 +610,73 @@ function calculateFilledSpaces(letter) {
     return count;
 }
 
-function isDigitEvenOrOdd(letter) {
-    const letterMapping = { 'T': 0, 'U': 1, 'V': 2, 'W': 3, 'X': 4, 'Y': 5 };
-    const index = letterMapping[letter];
+// function isDigitEvenOrOdd(letter) {
+//   console.log("isDigitEvenOrOdd....");
+//     const letterMapping = { 'T': 0, 'U': 1, 'V': 2, 'W': 3, 'X': 4, 'Y': 5 };
+//     const index = letterMapping[letter];
 
-    if (index !== undefined && hiddenDigits[index] !== undefined) {
-        return hiddenDigits[index] % 2 === 0 ? "짝수" : "홀수";
-    }
-    return "잘못된 입력입니다";
-}
+//     if (index !== undefined && hiddenDigits[index] !== undefined) {
+//         return hiddenDigits[index] % 2 === 0 ? translations[lang]["msg-even"] : translations[lang]["msg-odd"];
+//     }
+//     console.log(translations[lang]["msg-invalid-input-error"]);
+//     return translations[lang]["msg-invalid-input-error"];
+// }
 
 
 function handleDigitEvenOddQuestion() {
+    const lang = localStorage.getItem("language") || "en";
+    const translations = JSON.parse(document.getElementById('translations').textContent);
     const digitLetter = document.getElementById('digit-value').value;
     const digitIndex = digitLetter.charCodeAt(0) - 'T'.charCodeAt(0);
 
     if (digitIndex < 0 || digitIndex >= hiddenDigits.length) {
-        document.getElementById('question-output').innerText = "잘못된 입력입니다.";
+        document.getElementById('question-output').innerText = translations[lang]["msg-invalid-input-error"];
         return;
     }
 
     const digit = hiddenDigits[digitIndex];
-    const parity = digit % 2 === 0 ? "짝수" : "홀수";
+    const parity = digit % 2 === 0 ? translations[lang]["msg-even"] : translations[lang]["msg-odd"];
 
-    document.getElementById('question-output').innerText = `(${digitLetter}) 는 ${parity} 입니다.`;
+    // Template replacement for correct word order
+    const outputText = translations[lang]["msg-even-odd-result"]
+        .replace("{digitLetter}", digitLetter)
+        .replace("{parity}", parity);
+    
+    document.getElementById('question-output').innerText = outputText;
 
     const historyPanel = document.getElementById('history-panel');
     const answerEntry = document.createElement('div');
-    answerEntry.innerText = `Q: ${digitLetter} 는 짝수 인가요 홀수 인가요? A: ${parity}`;
-    historyPanel.appendChild(answerEntry);
+    answerEntry.innerText = translations[lang]["msg-even-odd-history"]
+        .replace("{digitLetter}", digitLetter)
+        .replace("{parity}", parity);
 
+    historyPanel.appendChild(answerEntry);
     historyPanel.scrollTop = historyPanel.scrollHeight;
 }
 
 
 
 function handleHowManyQuestion() {
+    const lang = localStorage.getItem("language") || "en";
+    const translations = JSON.parse(document.getElementById('translations').textContent);
     const letter = document.getElementById('row-col-value').value;
     const filledCount = calculateFilledSpaces(letter);
 
-    document.getElementById('question-output').innerText = `${letter} 는 ${filledCount} 칸 채워져 있습니다.`;
+    // 템플릿을 사용하여 문장 생성
+    const outputText = translations[lang]["msg-how-many"].replace("{letter}", letter);
+    document.getElementById('question-output').innerText = outputText;
 
     const historyPanel = document.getElementById('history-panel');
     const answerEntry = document.createElement('div');
-    answerEntry.innerText = `Q: ${letter}에는 몇 칸이 채워져 있나요? A: ${filledCount}`;
-    historyPanel.appendChild(answerEntry);
+    answerEntry.innerText = translations[lang]["msg-answer-how-many"]
+        .replace("{letter}", letter)
+        .replace("{count}", filledCount);
 
+    historyPanel.appendChild(answerEntry);
     historyPanel.scrollTop = historyPanel.scrollHeight;
 }
+
+
 
 function updateSecondDigitOptions() {
     const firstDigit = document.getElementById('first-digit').value;
@@ -536,32 +701,45 @@ function updateSecondDigitOptions() {
 }
 
 function handleComparisonQuestion() {
+    const lang = localStorage.getItem("language") || "en";
+    const translations = JSON.parse(document.getElementById('translations').textContent);
     const selectedPair = document.getElementById("digit-pair").value;
     const [firstDigit, secondDigit] = selectedPair.split("-");
 
     const firstIndex = firstDigit.charCodeAt(0) - "T".charCodeAt(0);
     const secondIndex = secondDigit.charCodeAt(0) - "T".charCodeAt(0);
 
-    let resultText = "";
+    let resultKey;
     if (hiddenDigits[firstIndex] > hiddenDigits[secondIndex]) {
-        resultText = `${firstDigit} 가 더 큽니다.`;
+        resultKey = "msg-first-greater";
     } else if (hiddenDigits[firstIndex] < hiddenDigits[secondIndex]) {
-        resultText = `${secondDigit} 가 더 큽니다.`;
+        resultKey = "msg-second-greater";
     } else {
-        resultText = `숫자를 생성해 주세요`;
+        resultKey = "msg-generate-first";
     }
+
+    // 템플릿을 활용한 언어별 문장 구성
+    const resultText = translations[lang][resultKey]
+        .replace("{firstDigit}", firstDigit)
+        .replace("{secondDigit}", secondDigit);
 
     document.getElementById('question-output').innerText = resultText;
 
     const historyPanel = document.getElementById('history-panel');
     const answerEntry = document.createElement('div');
-    answerEntry.innerText = `Q: ${firstDigit} 와 ${secondDigit} 중에 어떤게 더 큰가요? A: ${resultText}`;
-    historyPanel.appendChild(answerEntry);
+    answerEntry.innerText = translations[lang]["msg-comparison-history"]
+        .replace("{firstDigit}", firstDigit)
+        .replace("{secondDigit}", secondDigit)
+        .replace("{resultText}", resultText);
 
+    historyPanel.appendChild(answerEntry);
     historyPanel.scrollTop = historyPanel.scrollHeight;
 }
 
 function isSegmentFilled(column, row) {
+    const lang = localStorage.getItem("language") || "en";
+    const translations = JSON.parse(document.getElementById('translations').textContent);
+
     const segmentMatrix = {
         "A-J": null, "B-J": "first-digit-d1", "C-J": null, "D-J": null, "E-J": "second-digit-d1", "F-J": null, "G-J": null, "H-J": "third-digit-d1", "I-J": null,
         "A-K": "first-digit-d4", "B-K": null, "C-K": "first-digit-d5", "D-K": "second-digit-d4", "E-K": null, "F-K": "second-digit-d5", "G-K": "third-digit-d4", "H-K": null, "I-K": "third-digit-d5",
@@ -579,7 +757,7 @@ function isSegmentFilled(column, row) {
     const segment = segmentMatrix[key];
 
     if (!segment) {
-        return "잘못된 조합 선택 입니다";
+        return translations[lang]["msg-invalid-selection"];
     }
 
     const digitIndex = "ABC".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 0 : 3) :
@@ -587,56 +765,220 @@ function isSegmentFilled(column, row) {
                        "GHI".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 2 : 5) : -1;
 
     if (digitIndex === -1) {
-        return "잘못된 조합 선택 입니다";
+        return translations[lang]["msg-invalid-selection"];
     }
 
     const digit = hiddenDigits[digitIndex];
-
     const actualSegment = segment.split('-')[2];
 
-    return digitSegments[digit].includes(actualSegment) ? "네, 채워져 있습니다" : "아니요, 빈칸 입니다";
+    const isFilled = digitSegments[digit].includes(actualSegment);
+    return isFilled ? translations[lang]["msg-segment-filled"] : translations[lang]["msg-segment-empty"];
 }
 
 
 function handleSegmentFilledQuestion() {
+    const lang = localStorage.getItem("language") || "en";
+    const translations = JSON.parse(document.getElementById('translations').textContent);
     const column = document.getElementById('column-value').value;
     const row = document.getElementById('row-value').value;
     
     const result = isSegmentFilled(column, row);
 
-    document.getElementById('question-output').innerText = `Q: ${column}-${row} 는 채워져 있나요? A: ${result}`;
+    const outputText = translations[lang]["msg-segment-question"]
+        .replace("{column}", column)
+        .replace("{row}", row)
+        .replace("{result}", result);
+    
+    document.getElementById('question-output').innerText = outputText;
 
     const historyPanel = document.getElementById('history-panel');
     const answerEntry = document.createElement('div');
-    answerEntry.innerText = `Q: ${column}-${row} 는 채워져 있나요? A: ${result}`;
-    historyPanel.appendChild(answerEntry);
+    answerEntry.innerText = translations[lang]["msg-segment-history"]
+        .replace("{column}", column)
+        .replace("{row}", row)
+        .replace("{result}", result);
 
+    historyPanel.appendChild(answerEntry);
     historyPanel.scrollTop = historyPanel.scrollHeight;
 }
 
+function changeLanguage(lang) {
+    const translations = JSON.parse(document.getElementById('translations').textContent);
+    
+    document.querySelectorAll("[id]").forEach(el => {
+        if (translations[lang][el.id]) {
+            if (el.id === "label-even-odd") {
+                updateEvenOddLabel(lang);  // Update label dynamically
+            } else if (el.id === "label-comparison") {
+                updateComparisonLabel(lang);  // Update dynamically
+            } else if (el.id === "label-segment") {
+                updateSegmentLabel(lang);  // Update dynamically
+            } else if (el.id === "label-how-many") {
+                updateHowManyLabel(lang);  // Update dynamically
+            } else {
+                el.textContent = translations[lang][el.id];
+            }
+        }
+    });
 
-function checkUserInput() {
-    const userInput = document.getElementById("user-input").value;
-    const resultDisplay = document.getElementById("match-result");
+    document.querySelectorAll(".btn-ask").forEach(btn => {
+        btn.textContent = translations[lang]["btn-ask"];
+    });
 
-    if (!numberGenerated) {
-        resultDisplay.innerText = "숫자가 생성되지 않았습니다!";
-        return;
-    }
+        // Set placeholder for input field  
+    document.getElementById("user-input").setAttribute("placeholder", translations[lang]["placeholder-answer"]);
 
-    if (userInput.length !== 6 || isNaN(userInput)) {
-        resultDisplay.innerText = "6자리 숫자를 입력하세요!";
-        return;
-    }
+    localStorage.setItem("language", lang);
+    document.documentElement.lang = lang;
+}
 
-    if (userInput === hiddenDigits.join('')) {
-        resultDisplay.innerText = "정답!";
-        resultDisplay.style.color = "yellow";
+function updateEvenOddLabel(lang) {
+    const translations = JSON.parse(document.getElementById('translations').textContent);
+    const digit = document.getElementById("digit-value").value;
+    document.getElementById("label-even-odd").textContent = translations[lang]["label-even-odd"].replace("{digit}", `(${digit})`);
+}
+
+// Add event listener to update when dropdown changes
+document.getElementById("digit-value").addEventListener("change", function () {
+    const lang = localStorage.getItem("language") || "en";
+    updateEvenOddLabel(lang);
+});
+
+function updateComparisonLabel(lang) {
+    const translations = JSON.parse(document.getElementById('translations').textContent);
+    const pair = document.getElementById("digit-pair").value;
+    document.getElementById("label-comparison").textContent = translations[lang]["label-comparison"].replace("{pair}", pair);
+}
+
+// Update label dynamically when dropdown changes
+document.getElementById("digit-pair").addEventListener("change", function () {
+    const lang = localStorage.getItem("language") || "en";
+    updateComparisonLabel(lang);
+});
+
+
+
+function updateSegmentLabel(lang) {
+    const translations = JSON.parse(document.getElementById('translations').textContent);
+    const column = document.getElementById("column-value").value;
+    const row = document.getElementById("row-value").value;
+    document.getElementById("label-segment").textContent = translations[lang]["label-segment"]
+        .replace("{column}", column)
+        .replace("{row}", row);
+}
+
+// Update label dynamically when dropdown changes
+document.getElementById("column-value").addEventListener("change", function () {
+    const lang = localStorage.getItem("language") || "en";
+    updateSegmentLabel(lang);
+});
+
+document.getElementById("row-value").addEventListener("change", function () {
+    const lang = localStorage.getItem("language") || "en";
+    updateSegmentLabel(lang);
+});
+
+function updateHowManyLabel(lang) {
+    const translations = JSON.parse(document.getElementById('translations').textContent);
+    const selectedValue = document.getElementById("row-col-value").value;
+
+    // Adjust word order based on language
+    let formattedText;
+    if (lang === "en") {
+        formattedText = translations[lang]["label-how-many"].replace("{value}", selectedValue);
     } else {
-        resultDisplay.innerText = "오답!";
-        resultDisplay.style.color = "red";
+        formattedText = translations[lang]["label-how-many"].replace("{value}", selectedValue);
+    }
+
+    document.getElementById("label-how-many").textContent = formattedText;
+}
+
+// Update label dynamically when dropdown changes
+document.getElementById("row-col-value").addEventListener("change", function () {
+    const lang = localStorage.getItem("language") || "en";
+    updateHowManyLabel(lang);
+});
+
+function updateRowOptions() {
+    const column = document.getElementById("column-value").value;
+    const rowSelect = document.getElementById("row-value");
+
+    const segmentMatrix = {
+        "A-J": null, "B-J": "first-digit-d1", "C-J": null, "D-J": null, "E-J": "second-digit-d1", "F-J": null, "G-J": null, "H-J": "third-digit-d1", "I-J": null,
+        "A-K": "first-digit-d4", "B-K": null, "C-K": "first-digit-d5", "D-K": "second-digit-d4", "E-K": null, "F-K": "second-digit-d5", "G-K": "third-digit-d4", "H-K": null, "I-K": "third-digit-d5",
+        "A-L": null, "B-L": "first-digit-d2", "C-L": null, "D-L": null, "E-L": "second-digit-d2", "F-L": null, "G-L": null, "H-L": "third-digit-d2", "I-L": null,
+        "A-M": "first-digit-d6", "B-M": null, "C-M": "first-digit-d7", "D-M": "second-digit-d6", "E-M": null, "F-M": "second-digit-d7", "G-M": "third-digit-d6", "H-M": null, "I-M": "third-digit-d7",
+        "A-N": null, "B-N": "first-digit-d3", "C-N": null, "D-N": null, "E-N": "second-digit-d3", "F-N": null, "G-N": null, "H-N": "third-digit-d3", "I-N": null,
+        "A-O": null, "B-O": "fourth-digit-d1", "C-O": null, "D-O": null, "E-O": "fifth-digit-d1", "F-O": null, "G-O": null, "H-O": "sixth-digit-d1", "I-O": null,
+        "A-P": "fourth-digit-d4", "B-P": null, "C-P": "fourth-digit-d5", "D-P": "fifth-digit-d4", "E-P": null, "F-P": "fifth-digit-d5", "G-P": "sixth-digit-d4", "H-P": null, "I-P": "sixth-digit-d5",
+        "A-Q": null, "B-Q": "fourth-digit-d2", "C-Q": null, "D-Q": null, "E-Q": "fifth-digit-d2", "F-Q": null, "G-Q": null, "H-Q": "sixth-digit-d2", "I-Q": null,
+        "A-R": "fourth-digit-d6", "B-R": null, "C-R": "fourth-digit-d7", "D-R": "fifth-digit-d6", "E-R": null, "F-R": "fifth-digit-d7", "G-R": "sixth-digit-d6", "H-R": null, "I-R": "sixth-digit-d7",
+        "A-S": null, "B-S": "fourth-digit-d3", "C-S": null, "D-S": null, "E-S": "fifth-digit-d3", "F-S": null, "G-S": null, "H-S": "sixth-digit-d3", "I-S": null,
+    };
+
+    // Iterate through row options and disable invalid ones
+    Array.from(rowSelect.options).forEach(option => {
+        const row = option.value;
+        const key = `${column}-${row}`;
+        option.disabled = !segmentMatrix[key]; // Disable if no valid segment
+    });
+
+    // Automatically select the first valid option
+    const firstValidOption = Array.from(rowSelect.options).find(option => !option.disabled);
+    if (firstValidOption) {
+        rowSelect.value = firstValidOption.value;
     }
 }
+
+// Event listener for column selection change
+document.getElementById("column-value").addEventListener("change", updateRowOptions);
+
+// Run once at the beginning to initialize the valid row options
+document.addEventListener("DOMContentLoaded", updateRowOptions);
+
+
+                function checkUserInput() {
+            const translations = JSON.parse(document.getElementById('translations').textContent);
+            const lang = localStorage.getItem("language") || "en";
+            const userInput = document.getElementById("user-input").value;
+            const resultDisplay = document.getElementById("match-result");
+
+            if (!numberGenerated) {
+                resultDisplay.innerText = translations[lang]["msg-no-number"];
+                return;
+            }
+
+            if (userInput.length !== 6 || isNaN(userInput)) {
+                resultDisplay.innerText = translations[lang]["msg-invalid-input"];
+                return;
+            }
+
+            if (userInput === hiddenDigits.join('')) {
+                resultDisplay.innerText = translations[lang]["msg-correct"];
+                resultDisplay.style.color = "yellow";
+            } else {
+                resultDisplay.innerText = translations[lang]["msg-wrong"];
+                resultDisplay.style.color = "red";
+            }
+        }
+
+function setButtonsState(enabled) {
+    document.getElementById("btn-reveal").disabled = !enabled;
+    document.getElementById("btn-hide").disabled = !enabled;
+    document.getElementById("btn-check").disabled = !enabled;
+    document.querySelectorAll(".btn-ask").forEach(btn => {
+        btn.disabled = !enabled;
+    });
+}
+
+
+
+        const savedLang = localStorage.getItem("language") || "en";
+        document.addEventListener("DOMContentLoaded", () => changeLanguage(savedLang));
+        document.addEventListener("DOMContentLoaded", () => {
+    changeLanguage(savedLang);
+    setButtonsState(false);  // Disable buttons initially
+});
 
     </script>
 </body>
