@@ -1,3 +1,628 @@
-<htmm>
-  
-</htmm>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digit Code</title>
+    <style>
+        .top div {  
+          font-size: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #004d45;
+        } 
+
+        .top div a {  
+          color: #004d45;
+          font-size: 25px;
+          text-decoration: unset;
+        } 
+
+        .top {
+          background-color: #fcf6d6;
+          width: 100%;
+          /* Add these to position .top at the top */
+          position: sticky; /* Or position: fixed; */
+          top: 0;
+          z-index: 1; /* Ensure .top is above other content */
+          margin-bottom: 20px;
+        }
+
+        body {
+            background: #077b4c;
+            display: flex;
+            flex-direction: column;
+/*            justify-content: center; /* This might not be needed anymore */
+            align-items: center; /* This might not be needed anymore */*/
+            height: 100vh;
+            margin: 0; /* Remove the default body margin */
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 40px;
+            justify-content: center;
+            background: #f3f3f3;
+            padding: 40px 80px 40px 80px;
+
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .digit {
+            display: flex;
+            position: relative;
+            width: 28px;
+            height: 50px;
+            margin: 0 4px;
+        }
+        .digit span {
+            opacity: 0;
+            position: absolute;
+            background-color: #272e38;
+            transition: 0.25s;
+        }
+        .digit span:before,
+        .digit span:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 5px solid transparent;
+        }
+
+        .digit .d1 {
+            height: 5px;
+            width: 16px;
+            top: 0;
+            left: 6px;
+        }
+        .digit .d1:before {
+            border-width: 0 5px 5px 0;
+            border-right-color: inherit;
+            left: -5px;
+        }
+        .digit .d1:after {
+            border-width: 0 0 5px 5px;
+            border-left-color: inherit;
+            right: -5px;
+        }
+
+        .digit .d2 {
+            height: 5px;
+            width: 16px;
+            top: 24px;
+            left: 6px;
+        }
+        .digit .d2:before {
+            border-width: 3px 4px 2px;
+            border-right-color: inherit;
+            left: -8px;
+        }
+        .digit .d2:after {
+            border-width: 3px 4px 2px;
+            border-left-color: inherit;
+            right: -8px;
+        }
+
+        .digit .d3 {
+            height: 5px;
+            width: 16px;
+            top: 48px;
+            left: 6px;
+        }
+        .digit .d3:before {
+            border-width: 5px 5px 0 0;
+            border-right-color: inherit;
+            left: -5px;
+        }
+        .digit .d3:after {
+            border-width: 5px 0 0 5px;
+            border-left-color: inherit;
+            right: -5px;
+        }
+
+        .digit .d4 {
+            width: 5px;
+            height: 14px;
+            top: 7px;
+            left: 0;
+        }
+        .digit .d4:before {
+            border-width: 0 5px 5px 0;
+            border-bottom-color: inherit;
+            top: -5px;
+        }
+        .digit .d4:after {
+            border-width: 0 0 5px 5px;
+            border-left-color: inherit;
+            bottom: -5px;
+        }
+
+        .digit .d5 {
+            width: 5px;
+            height: 14px;
+            top: 7px;
+            right: 0;
+        }
+        .digit .d5:before {
+            border-width: 0 0 5px 5px;
+            border-bottom-color: inherit;
+            top: -5px;
+        }
+        .digit .d5:after {
+            border-width: 5px 0 0 5px;
+            border-top-color: inherit;
+            bottom: -5px;
+        }
+
+        .digit .d6 {
+            width: 5px;
+            height: 14px;
+            top: 32px;
+            left: 0;
+        }
+        .digit .d6:before {
+            border-width: 0 5px 5px 0;
+            border-bottom-color: inherit;
+            top: -5px;
+        }
+        .digit .d6:after {
+            border-width: 0 0 5px 5px;
+            border-left-color: inherit;
+            bottom: -5px;
+        }
+
+        .digit .d7 {
+            width: 5px;
+            height: 14px;
+            top: 32px;
+            right: 0;
+        }
+        .digit .d7:before {
+            border-width: 0 0 5px 5px;
+            border-bottom-color: inherit;
+            top: -5px;
+        }
+        .digit .d7:after {
+            border-width: 5px 0 0 5px;
+            border-top-color: inherit;
+            bottom: -5px;
+        }
+
+        .digit span.on {
+            opacity: 1;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #272e38;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+        .button-group { /* Style the button container */
+            display: flex; /* Arrange buttons horizontally */
+            gap: 10px;      /* Add some space between buttons */
+        }
+
+       #hidden-number, #question-output {
+            margin-top: 10px;
+            color: white;
+            font-size: 18px;
+        }
+        .question-input {
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #fcf6d6;  
+            padding: 2px 5px 2px 5px; 
+            border-radius: 10px;
+            width: 500px;
+            justify-content: center;
+        }
+        .question-input select, .question-input button {
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #history-panel {
+          margin: 10px 0; max-height: 5em; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; width: 500px; font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <section class="top">
+      <div>DIGIT CODE</div>
+      <div><a href="https://smartstore.naver.com/playte">디지트 코드 구매 - Playte Store</a></div>
+    </section>
+    <div class="button-group">  <button onclick="revealDigits()">Reveal</button>
+        <button onclick="hideDigits()">Hide</button>
+            <button onclick="generateRandomDigitsWithRules()">Generate</button>
+    </div>
+    <div class="board" id="digit-board">
+        <div class="digit" id="digit-1"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+        <div class="digit" id="digit-2"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+        <div class="digit" id="digit-3"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+        <div class="digit" id="digit-4"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+        <div class="digit" id="digit-5"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+        <div class="digit" id="digit-6"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+    </div>
+
+
+    <div id="hidden-number">Hidden Number: </div>
+
+
+    <div class="question-input">
+        <label for="row-col-value">How many spaces in:</label>
+        <select id="row-col-value">
+            <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+            <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+            <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+            <option value="J">J</option><option value="K">K</option><option value="L">L</option>
+            <option value="M">M</option><option value="N">N</option><option value="O">O</option>
+            <option value="P">P</option><option value="Q">Q</option><option value="R">R</option>
+            <option value="S">S</option>
+        </select>
+        <button onclick="handleHowManyQuestion()">Ask</button>
+    </div>
+
+<div class="question-input">
+    <label for="digit-value">Is this</label>
+    <select id="digit-value">
+        <option value="T">(T)</option>
+        <option value="U">(U)</option>
+        <option value="V">(V)</option>
+        <option value="W">(W)</option>
+        <option value="X">(X)</option>
+        <option value="Y">(Y)</option>
+    </select>
+    <label for="digit-value">even or odd?</label>
+
+    <button onclick="handleDigitEvenOddQuestion()">Ask</button>
+</div>
+
+<div class="question-input">
+    <label for="digit-pair">Which one is larger?</label>
+    <select id="digit-pair">
+        <option value="T-U">(T-U)</option>
+        <option value="U-V">(U-V)</option>
+        <option value="W-X">(W-X)</option>
+        <option value="X-Y">(X-Y)</option>
+        <option value="T-W">(T-W)</option>
+        <option value="U-X">(U-X)</option>
+        <option value="V-Y">(V-Y)</option>
+    </select>
+    <button onclick="handleComparisonQuestion()">Ask</button>
+</div>
+
+<div class="question-input">
+    <label for="column-value">Select column:</label>
+    <select id="column-value">
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+        <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+        <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+    </select>
+    
+    <label for="row-value">Select row:</label>
+    <select id="row-value">
+        <option value="J">J</option><option value="K">K</option><option value="L">L</option>
+        <option value="M">M</option><option value="N">N</option><option value="O">O</option>
+        <option value="P">P</option><option value="Q">Q</option><option value="R">R</option>
+        <option value="S">S</option>
+    </select>
+
+    <button onclick="handleSegmentFilledQuestion()">Ask</button>
+</div>
+
+
+
+<div id="history-panel" style="">
+</div>
+
+     <div id="question-output"></div>
+
+    <div class="question-output" id="question-output"></div>
+
+    <script>
+        let hiddenDigits = [];
+        let numberGenerated = false;
+
+        const digitSegments = {
+            0: ['d1', 'd3', 'd4', 'd5', 'd6', 'd7'],
+            1: ['d5', 'd7'],
+            2: ['d1', 'd2', 'd3', 'd5', 'd6'],
+            3: ['d1', 'd2', 'd3', 'd5', 'd7'],
+            4: ['d2', 'd4', 'd5', 'd7'],
+            5: ['d1', 'd2', 'd3', 'd4', 'd7'],
+            6: ['d1', 'd2', 'd3', 'd4', 'd6', 'd7'],
+            7: ['d1', 'd5', 'd7'],
+            8: ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7'],
+            9: ['d1', 'd2', 'd3', 'd4', 'd5', 'd7']
+        };
+
+        function clearSegments(digitId) {
+            document.querySelectorAll(`#${digitId} span`).forEach(span => span.classList.remove('on'));
+        }
+
+        function lightUpDigit(digitId, number) {
+            clearSegments(digitId);
+            digitSegments[number].forEach(segment => {
+                document.querySelector(`#${digitId} .${segment}`).classList.add('on');
+            });
+        }
+
+        function generateRandomDigitsWithRules() {
+            hiddenDigits = [];
+            numberGenerated = true;
+            const usedNumbers = Array(10).fill(0);
+
+            for (let i = 0; i < 6; i++) {
+                let randomDigit;
+                do {
+                    randomDigit = Math.floor(Math.random() * 10);
+                } while (
+                    usedNumbers[randomDigit] === 2 ||
+                    (i > 0 && hiddenDigits[i - 1] === randomDigit) ||
+                    (i >= 3 && hiddenDigits[i - 3] === randomDigit)
+                );
+
+                hiddenDigits.push(randomDigit);
+                usedNumbers[randomDigit]++;
+            }
+
+            console.log("Hidden Digits Generated:", hiddenDigits);
+            document.getElementById('hidden-number').innerText = "Hidden Number: " + hiddenDigits.join('');
+
+            document.querySelectorAll('.digit span').forEach(span => span.classList.remove('on'));
+        }
+
+        function revealDigits() {
+            if (!numberGenerated) return;
+
+            hiddenDigits.forEach((num, index) => {
+                lightUpDigit(`digit-${index + 1}`, num);
+            });
+        }
+
+function hideDigits() {
+    if (!numberGenerated) return;
+
+    hiddenDigits.forEach((num, index) => {
+        const digitId = `digit-${index + 1}`;
+        clearSegments(digitId); // This already hides the digit
+    });
+}
+
+function calculateFilledSpaces(letter) {
+    let count = 0;
+
+    const columnMapping = {
+        'A': ['d4', 'd6'],
+        'B': ['d1', 'd2', 'd3'],
+        'C': ['d5', 'd7'],
+        'D': ['d4', 'd6'],
+        'E': ['d1', 'd2', 'd3'],
+        'F': ['d5', 'd7'],
+        'G': ['d4', 'd6'],
+        'H': ['d1', 'd2', 'd3'],
+        'I': ['d5', 'd7']
+    };
+
+    const rowMapping = {
+        'J': ['d1'],
+        'K': ['d4', 'd5'],
+        'L': ['d2'],
+        'M': ['d6', 'd7'],
+        'N': ['d3'],
+        'O': ['d1'],
+        'P': ['d4', 'd5'],
+        'Q': ['d2'],
+        'R': ['d6', 'd7'],
+        'S': ['d3']
+    };
+
+    hiddenDigits.forEach((digit, index) => {
+        let segments = digitSegments[digit];
+
+        // Column calculation
+        if (columnMapping[letter] && index % 3 === Math.floor((letter.charCodeAt(0) - 65) / 3)) {
+            columnMapping[letter].forEach(segment => {
+                if (segments.includes(segment)) count++;
+            });
+        }
+
+        // Row calculation
+        if (rowMapping[letter]) {
+            const isUpperRow = index < 3;
+            const isLowerRow = index >= 3;
+            if ((isUpperRow && 'JKLMN'.includes(letter)) || (isLowerRow && 'OPQRS'.includes(letter))) {
+                rowMapping[letter].forEach(segment => {
+                    if (segments.includes(segment)) count++;
+                });
+            }
+        }
+    });
+
+    return count;
+}
+
+function isDigitEvenOrOdd(letter) {
+    const letterMapping = { 'T': 0, 'U': 1, 'V': 2, 'W': 3, 'X': 4, 'Y': 5 };
+    const index = letterMapping[letter];
+
+    if (index !== undefined && hiddenDigits[index] !== undefined) {
+        return hiddenDigits[index] % 2 === 0 ? "even" : "odd";
+    }
+    return "Invalid input";
+}
+
+
+function handleDigitEvenOddQuestion() {
+    const digitLetter = document.getElementById('digit-value').value;
+    const digitIndex = digitLetter.charCodeAt(0) - 'T'.charCodeAt(0);
+
+    if (digitIndex < 0 || digitIndex >= hiddenDigits.length) {
+        document.getElementById('question-output').innerText = "Invalid digit selection.";
+        return;
+    }
+
+    const digit = hiddenDigits[digitIndex];
+    const parity = digit % 2 === 0 ? "even" : "odd";
+
+    // Display the answer below the question
+    document.getElementById('question-output').innerText = `The selected digit (${digitLetter}) is ${parity}.`;
+
+    // Add the answer to the history panel
+    const historyPanel = document.getElementById('history-panel');
+    const answerEntry = document.createElement('div');
+    answerEntry.innerText = `Q: Is ${digitLetter} even or odd? A: ${parity}`;
+    historyPanel.appendChild(answerEntry);
+
+    // Automatically scroll to the bottom of the history panel
+    historyPanel.scrollTop = historyPanel.scrollHeight;
+}
+
+
+
+function handleHowManyQuestion() {
+    const letter = document.getElementById('row-col-value').value;
+    const filledCount = calculateFilledSpaces(letter);
+
+    // Display the current answer below the question
+    document.getElementById('question-output').innerText = `There are ${filledCount} spaces filled in ${letter}.`;
+
+    // Add the answer to the history panel
+    const historyPanel = document.getElementById('history-panel');
+    const answerEntry = document.createElement('div');
+    answerEntry.innerText = `Q: How many spaces in ${letter}? A: ${filledCount}`;
+    historyPanel.appendChild(answerEntry);
+
+    // Automatically scroll to the bottom of the history panel
+    historyPanel.scrollTop = historyPanel.scrollHeight;
+}
+
+function updateSecondDigitOptions() {
+    const firstDigit = document.getElementById('first-digit').value;
+    const secondDigitDropdown = document.getElementById('second-digit');
+    secondDigitDropdown.innerHTML = ''; // Clear previous options
+
+    const adjacentPairs = {
+        'T': ['U', 'W'],
+        'U': ['T', 'V', 'X'],
+        'V': ['U', 'W', 'Y'],
+        'W': ['V', 'T', 'X'],
+        'X': ['U', 'W', 'Y'],
+        'Y': ['V', 'X']
+    };
+
+    adjacentPairs[firstDigit].forEach(adjacent => {
+        let option = document.createElement('option');
+        option.value = adjacent;
+        option.textContent = `(${adjacent})`;
+        secondDigitDropdown.appendChild(option);
+    });
+}
+
+function handleComparisonQuestion() {
+    const selectedPair = document.getElementById("digit-pair").value;
+    const [firstDigit, secondDigit] = selectedPair.split("-");
+
+    const firstIndex = firstDigit.charCodeAt(0) - "T".charCodeAt(0);
+    const secondIndex = secondDigit.charCodeAt(0) - "T".charCodeAt(0);
+
+    let resultText = "";
+    if (hiddenDigits[firstIndex] > hiddenDigits[secondIndex]) {
+        resultText = `First digit (${firstDigit}) is larger.`;
+    } else if (hiddenDigits[firstIndex] < hiddenDigits[secondIndex]) {
+        resultText = `Second digit (${secondDigit}) is larger.`;
+    } else {
+        resultText = `Both digits (${firstDigit} and ${secondDigit}) are equal.`;
+    }
+
+    // Display the answer below the question
+    document.getElementById('question-output').innerText = resultText;
+
+    // Add the answer to the history panel
+    const historyPanel = document.getElementById('history-panel');
+    const answerEntry = document.createElement('div');
+    answerEntry.innerText = `Q: Which one is larger, ${firstDigit} or ${secondDigit}? A: ${resultText}`;
+    historyPanel.appendChild(answerEntry);
+
+    // Automatically scroll to the bottom of the history panel
+    historyPanel.scrollTop = historyPanel.scrollHeight;
+}
+
+function isSegmentFilled(column, row) {
+    // Matrix defining valid segments per (Column, Row) combination
+    const segmentMatrix = {
+        "A-J": null, "B-J": "d1", "C-J": null, "D-J": null, "E-J": "d1", "F-J": null, "G-J": null, "H-J": "d1", "I-J": null,
+        "A-K": "d4", "B-K": null, "C-K": "d5", "D-K": "d4", "E-K": null, "F-K": "d5", "G-K": "d4", "H-K": null, "I-K": "d5",
+        "A-L": null, "B-L": "d2", "C-L": null, "D-L": null, "E-L": "d2", "F-L": null, "G-L": null, "H-L": "d2", "I-L": null,
+        "A-M": "d6", "B-M": null, "C-M": "d6", "D-M": "d6", "E-M": null, "F-M": "d6", "G-M": "d6", "H-M": null, "I-M": "d6",
+        "A-N": null, "B-N": "d3", "C-N": null, "D-N": null, "E-N": "d3", "F-N": null, "G-N": null, "H-N": "d3", "I-N": null,
+        "A-O": null, "B-O": "d1", "C-O": null, "D-O": null, "E-O": "d1", "F-O": null, "G-O": null, "H-O": "d1", "I-O": null,
+        "A-P": "d4", "B-P": null, "C-P": "d5", "D-P": "d4", "E-P": null, "F-P": "d5", "G-P": "d4", "H-P": null, "I-P": "d5",
+        "A-Q": null, "B-Q": "d2", "C-Q": null, "D-Q": null, "E-Q": "d2", "F-Q": null, "G-Q": null, "H-Q": "d2", "I-Q": null,
+        "A-R": "d6", "B-R": null, "C-R": "d6", "D-R": "d6", "E-R": null, "F-R": "d6", "G-R": "d6", "H-R": null, "I-R": "d6",
+        "A-S": null, "B-S": "d3", "C-S": null, "D-S": null, "E-S": "d3", "F-S": null, "G-S": null, "H-S": "d3", "I-S": null,
+    };
+
+    // Get the corresponding segment for the given column and row
+    const key = `${column}-${row}`;
+    const segment = segmentMatrix[key];
+
+    // If the combination is invalid
+    if (!segment) {
+        return "Invalid selection";
+    }
+
+    // Determine which digit index this column belongs to (0-5)
+    const digitIndex = "ABC".includes(column) ? 0 :
+                       "DEF".includes(column) ? 1 :
+                       "GHI".includes(column) ? 2 : 
+                       "ABC".includes(column) ? 3 :
+                       "DEF".includes(column) ? 4 : 5;
+
+    // Get the number from the hiddenDigits array
+    const digit = hiddenDigits[digitIndex];
+
+    // Check if the segment is on
+    return digitSegments[digit].includes(segment) ? "Filled" : "Not Filled";
+}
+
+// Function to handle the question and update UI
+function handleSegmentFilledQuestion() {
+    const column = document.getElementById('column-value').value;
+    const row = document.getElementById('row-value').value;
+    
+    const result = isSegmentFilled(column, row);
+
+    // Display the result
+    document.getElementById('question-output').innerText = `Q: Is ${column}-${row} filled? A: ${result}`;
+
+    // Add the answer to history
+    const historyPanel = document.getElementById('history-panel');
+    const answerEntry = document.createElement('div');
+    answerEntry.innerText = `Q: Is ${column}-${row} filled? A: ${result}`;
+    historyPanel.appendChild(answerEntry);
+
+    // Automatically scroll to the bottom of the history panel
+    historyPanel.scrollTop = historyPanel.scrollHeight;
+}
+
+
+
+    </script>
+</body>
+</html>
