@@ -6,7 +6,7 @@
     <title>Digit Code</title>
     <style>
         .top div {  
-          font-size: 50px;
+          font-size: 40px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -15,7 +15,7 @@
 
         .top div a {  
           color: #004d45;
-          font-size: 25px;
+          font-size: 20px;
           text-decoration: unset;
         } 
 
@@ -26,7 +26,6 @@
           position: sticky; /* Or position: fixed; */
           top: 0;
           z-index: 1; /* Ensure .top is above other content */
-          margin-bottom: 20px;
         }
 
         body {
@@ -45,7 +44,7 @@
             gap: 40px;
             justify-content: center;
             background: #f3f3f3;
-            padding: 40px 80px 40px 80px;
+            padding: 30px 70px 30px 70px;
 
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -218,7 +217,7 @@
        #hidden-number, #question-output {
             margin-top: 10px;
             color: white;
-            font-size: 18px;
+            font-size: 14px;
         }
         .question-input {
             margin-top: 5px;
@@ -228,16 +227,17 @@
             background-color: #fcf6d6;  
             padding: 2px 5px 2px 5px; 
             border-radius: 10px;
-            width: 500px;
+            width: 350px;
             justify-content: center;
+            font-size: 14px;
         }
         .question-input select, .question-input button {
             padding: 5px;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         #history-panel {
-          margin: 10px 0; max-height: 5em; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; width: 500px; font-size: 13px;
+          margin: 10px 0; max-height: 5em; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; width: 350px; font-size: 13px;
         }
 
         #match-result {
@@ -548,7 +548,7 @@ function handleComparisonQuestion() {
     } else if (hiddenDigits[firstIndex] < hiddenDigits[secondIndex]) {
         resultText = `${secondDigit} 가 더 큽니다.`;
     } else {
-        resultText = `Both digits (${firstDigit} and ${secondDigit}) are equal.`;
+        resultText = `숫자를 생성해 주세요`;
     }
 
     document.getElementById('question-output').innerText = resultText;
