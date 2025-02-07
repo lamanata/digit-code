@@ -239,6 +239,13 @@
         #history-panel {
           margin: 10px 0; max-height: 5em; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; width: 500px; font-size: 13px;
         }
+
+        #match-result {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 10px;
+    color: white;
+}
     </style>
 </head>
 <body>
@@ -246,9 +253,9 @@
       <div>DIGIT CODE</div>
       <div><a href="https://smartstore.naver.com/playte">디지트 코드 구매 - Playte Store</a></div>
     </section>
-    <div class="button-group">  <button onclick="revealDigits()">Reveal</button>
-        <button onclick="hideDigits()">Hide</button>
-            <button onclick="generateRandomDigitsWithRules()">Generate</button>
+    <div class="button-group">  <button onclick="revealDigits()">숫자 공개</button>
+        <button onclick="hideDigits()">숫자 숨기기</button>
+            <button onclick="generateRandomDigitsWithRules()">숫자 생성</button>
     </div>
     <div class="board" id="digit-board">
         <div class="digit" id="digit-1"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
@@ -259,12 +266,14 @@
         <div class="digit" id="digit-6"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
     </div>
 
-
-    <div id="hidden-number">Hidden Number: </div>
-
+<div class="answer-input">
+    <label for="user-input">정답 입력:</label>
+    <input type="text" id="user-input" maxlength="6" pattern="\d{6}" placeholder="6자리 숫자">
+    <button onclick="checkUserInput()">맞춰보기</button>
+    <span id="match-result"></span>
+</div>
 
     <div class="question-input">
-        <label for="row-col-value">How many spaces in:</label>
         <select id="row-col-value">
             <option value="A">A</option><option value="B">B</option><option value="C">C</option>
             <option value="D">D</option><option value="E">E</option><option value="F">F</option>
@@ -274,11 +283,11 @@
             <option value="P">P</option><option value="Q">Q</option><option value="R">R</option>
             <option value="S">S</option>
         </select>
-        <button onclick="handleHowManyQuestion()">Ask</button>
+        <label for="row-col-value">에는 몇 칸이 채워져 있나요?</label>
+        <button onclick="handleHowManyQuestion()">물어보기</button>
     </div>
 
 <div class="question-input">
-    <label for="digit-value">Is this</label>
     <select id="digit-value">
         <option value="T">(T)</option>
         <option value="U">(U)</option>
@@ -287,13 +296,13 @@
         <option value="X">(X)</option>
         <option value="Y">(Y)</option>
     </select>
-    <label for="digit-value">even or odd?</label>
+    <label for="digit-value">는 짝수 인가요 홀수 인가요?</label>
 
-    <button onclick="handleDigitEvenOddQuestion()">Ask</button>
+    <button onclick="handleDigitEvenOddQuestion()">물어보기</button>
 </div>
 
 <div class="question-input">
-    <label for="digit-pair">Which one is larger?</label>
+    <label for="digit-pair">다음 숫자중 어떤게 더 큰가요?</label>
     <select id="digit-pair">
         <option value="T-U">(T-U)</option>
         <option value="U-V">(U-V)</option>
@@ -303,26 +312,26 @@
         <option value="U-X">(U-X)</option>
         <option value="V-Y">(V-Y)</option>
     </select>
-    <button onclick="handleComparisonQuestion()">Ask</button>
+    <button onclick="handleComparisonQuestion()">물어보기</button>
 </div>
 
 <div class="question-input">
-    <label for="column-value">Select column:</label>
+    <label for="column-value">열 </label>
     <select id="column-value">
         <option value="A">A</option><option value="B">B</option><option value="C">C</option>
         <option value="D">D</option><option value="E">E</option><option value="F">F</option>
         <option value="G">G</option><option value="H">H</option><option value="I">I</option>
     </select>
     
-    <label for="row-value">Select row:</label>
+    <label for="row-value">, 행 </label>
     <select id="row-value">
         <option value="J">J</option><option value="K">K</option><option value="L">L</option>
         <option value="M">M</option><option value="N">N</option><option value="O">O</option>
         <option value="P">P</option><option value="Q">Q</option><option value="R">R</option>
         <option value="S">S</option>
     </select>
-
-    <button onclick="handleSegmentFilledQuestion()">Ask</button>
+    <label for="row-value"> 칸은 채워져 있나요? </label>
+    <button onclick="handleSegmentFilledQuestion()">물어보기</button>
 </div>
 
 
@@ -400,7 +409,7 @@ function hideDigits() {
 
     hiddenDigits.forEach((num, index) => {
         const digitId = `digit-${index + 1}`;
-        clearSegments(digitId); // This already hides the digit
+        clearSegments(digitId);
     });
 }
 
@@ -435,14 +444,12 @@ function calculateFilledSpaces(letter) {
     hiddenDigits.forEach((digit, index) => {
         let segments = digitSegments[digit];
 
-        // Column calculation
         if (columnMapping[letter] && index % 3 === Math.floor((letter.charCodeAt(0) - 65) / 3)) {
             columnMapping[letter].forEach(segment => {
                 if (segments.includes(segment)) count++;
             });
         }
 
-        // Row calculation
         if (rowMapping[letter]) {
             const isUpperRow = index < 3;
             const isLowerRow = index >= 3;
@@ -462,9 +469,9 @@ function isDigitEvenOrOdd(letter) {
     const index = letterMapping[letter];
 
     if (index !== undefined && hiddenDigits[index] !== undefined) {
-        return hiddenDigits[index] % 2 === 0 ? "even" : "odd";
+        return hiddenDigits[index] % 2 === 0 ? "짝수" : "홀수";
     }
-    return "Invalid input";
+    return "잘못된 입력입니다";
 }
 
 
@@ -473,23 +480,20 @@ function handleDigitEvenOddQuestion() {
     const digitIndex = digitLetter.charCodeAt(0) - 'T'.charCodeAt(0);
 
     if (digitIndex < 0 || digitIndex >= hiddenDigits.length) {
-        document.getElementById('question-output').innerText = "Invalid digit selection.";
+        document.getElementById('question-output').innerText = "잘못된 입력입니다.";
         return;
     }
 
     const digit = hiddenDigits[digitIndex];
-    const parity = digit % 2 === 0 ? "even" : "odd";
+    const parity = digit % 2 === 0 ? "짝수" : "홀수";
 
-    // Display the answer below the question
-    document.getElementById('question-output').innerText = `The selected digit (${digitLetter}) is ${parity}.`;
+    document.getElementById('question-output').innerText = `(${digitLetter}) 는 ${parity} 입니다.`;
 
-    // Add the answer to the history panel
     const historyPanel = document.getElementById('history-panel');
     const answerEntry = document.createElement('div');
-    answerEntry.innerText = `Q: Is ${digitLetter} even or odd? A: ${parity}`;
+    answerEntry.innerText = `Q: ${digitLetter} 는 짝수 인가요 홀수 인가요? A: ${parity}`;
     historyPanel.appendChild(answerEntry);
 
-    // Automatically scroll to the bottom of the history panel
     historyPanel.scrollTop = historyPanel.scrollHeight;
 }
 
@@ -499,16 +503,13 @@ function handleHowManyQuestion() {
     const letter = document.getElementById('row-col-value').value;
     const filledCount = calculateFilledSpaces(letter);
 
-    // Display the current answer below the question
-    document.getElementById('question-output').innerText = `There are ${filledCount} spaces filled in ${letter}.`;
+    document.getElementById('question-output').innerText = `${letter} 는 ${filledCount} 칸 채워져 있습니다.`;
 
-    // Add the answer to the history panel
     const historyPanel = document.getElementById('history-panel');
     const answerEntry = document.createElement('div');
-    answerEntry.innerText = `Q: How many spaces in ${letter}? A: ${filledCount}`;
+    answerEntry.innerText = `Q: ${letter}에는 몇 칸이 채워져 있나요? A: ${filledCount}`;
     historyPanel.appendChild(answerEntry);
 
-    // Automatically scroll to the bottom of the history panel
     historyPanel.scrollTop = historyPanel.scrollHeight;
 }
 
@@ -543,85 +544,99 @@ function handleComparisonQuestion() {
 
     let resultText = "";
     if (hiddenDigits[firstIndex] > hiddenDigits[secondIndex]) {
-        resultText = `First digit (${firstDigit}) is larger.`;
+        resultText = `${firstDigit} 가 더 큽니다.`;
     } else if (hiddenDigits[firstIndex] < hiddenDigits[secondIndex]) {
-        resultText = `Second digit (${secondDigit}) is larger.`;
+        resultText = `${secondDigit} 가 더 큽니다.`;
     } else {
         resultText = `Both digits (${firstDigit} and ${secondDigit}) are equal.`;
     }
 
-    // Display the answer below the question
     document.getElementById('question-output').innerText = resultText;
 
-    // Add the answer to the history panel
     const historyPanel = document.getElementById('history-panel');
     const answerEntry = document.createElement('div');
-    answerEntry.innerText = `Q: Which one is larger, ${firstDigit} or ${secondDigit}? A: ${resultText}`;
+    answerEntry.innerText = `Q: ${firstDigit} 와 ${secondDigit} 중에 어떤게 더 큰가요? A: ${resultText}`;
     historyPanel.appendChild(answerEntry);
 
-    // Automatically scroll to the bottom of the history panel
     historyPanel.scrollTop = historyPanel.scrollHeight;
 }
 
 function isSegmentFilled(column, row) {
-    // Matrix defining valid segments per (Column, Row) combination
     const segmentMatrix = {
-        "A-J": null, "B-J": "d1", "C-J": null, "D-J": null, "E-J": "d1", "F-J": null, "G-J": null, "H-J": "d1", "I-J": null,
-        "A-K": "d4", "B-K": null, "C-K": "d5", "D-K": "d4", "E-K": null, "F-K": "d5", "G-K": "d4", "H-K": null, "I-K": "d5",
-        "A-L": null, "B-L": "d2", "C-L": null, "D-L": null, "E-L": "d2", "F-L": null, "G-L": null, "H-L": "d2", "I-L": null,
-        "A-M": "d6", "B-M": null, "C-M": "d6", "D-M": "d6", "E-M": null, "F-M": "d6", "G-M": "d6", "H-M": null, "I-M": "d6",
-        "A-N": null, "B-N": "d3", "C-N": null, "D-N": null, "E-N": "d3", "F-N": null, "G-N": null, "H-N": "d3", "I-N": null,
-        "A-O": null, "B-O": "d1", "C-O": null, "D-O": null, "E-O": "d1", "F-O": null, "G-O": null, "H-O": "d1", "I-O": null,
-        "A-P": "d4", "B-P": null, "C-P": "d5", "D-P": "d4", "E-P": null, "F-P": "d5", "G-P": "d4", "H-P": null, "I-P": "d5",
-        "A-Q": null, "B-Q": "d2", "C-Q": null, "D-Q": null, "E-Q": "d2", "F-Q": null, "G-Q": null, "H-Q": "d2", "I-Q": null,
-        "A-R": "d6", "B-R": null, "C-R": "d6", "D-R": "d6", "E-R": null, "F-R": "d6", "G-R": "d6", "H-R": null, "I-R": "d6",
-        "A-S": null, "B-S": "d3", "C-S": null, "D-S": null, "E-S": "d3", "F-S": null, "G-S": null, "H-S": "d3", "I-S": null,
+        "A-J": null, "B-J": "first-digit-d1", "C-J": null, "D-J": null, "E-J": "second-digit-d1", "F-J": null, "G-J": null, "H-J": "third-digit-d1", "I-J": null,
+        "A-K": "first-digit-d4", "B-K": null, "C-K": "first-digit-d5", "D-K": "second-digit-d4", "E-K": null, "F-K": "second-digit-d5", "G-K": "third-digit-d4", "H-K": null, "I-K": "third-digit-d5",
+        "A-L": null, "B-L": "first-digit-d2", "C-L": null, "D-L": null, "E-L": "second-digit-d2", "F-L": null, "G-L": null, "H-L": "third-digit-d2", "I-L": null,
+        "A-M": "first-digit-d6", "B-M": null, "C-M": "first-digit-d7", "D-M": "second-digit-d6", "E-M": null, "F-M": "second-digit-d7", "G-M": "third-digit-d6", "H-M": null, "I-M": "third-digit-d7",
+        "A-N": null, "B-N": "first-digit-d3", "C-N": null, "D-N": null, "E-N": "second-digit-d3", "F-N": null, "G-N": null, "H-N": "third-digit-d3", "I-N": null,
+        "A-O": null, "B-O": "fourth-digit-d1", "C-O": null, "D-O": null, "E-O": "fifth-digit-d1", "F-O": null, "G-O": null, "H-O": "sixth-digit-d1", "I-O": null,
+        "A-P": "fourth-digit-d4", "B-P": null, "C-P": "fourth-digit-d5", "D-P": "fifth-digit-d4", "E-P": null, "F-P": "fifth-digit-d5", "G-P": "sixth-digit-d4", "H-P": null, "I-P": "sixth-digit-d5",
+        "A-Q": null, "B-Q": "fourth-digit-d2", "C-Q": null, "D-Q": null, "E-Q": "fifth-digit-d2", "F-Q": null, "G-Q": null, "H-Q": "sixth-digit-d2", "I-Q": null,
+        "A-R": "fourth-digit-d6", "B-R": null, "C-R": "fourth-digit-d7", "D-R": "fifth-digit-d6", "E-R": null, "F-R": "fifth-digit-d7", "G-R": "sixth-digit-d6", "H-R": null, "I-R": "sixth-digit-d7",
+        "A-S": null, "B-S": "fourth-digit-d3", "C-S": null, "D-S": null, "E-S": "fifth-digit-d3", "F-S": null, "G-S": null, "H-S": "sixth-digit-d3", "I-S": null,
     };
 
-    // Get the corresponding segment for the given column and row
     const key = `${column}-${row}`;
     const segment = segmentMatrix[key];
 
-    // If the combination is invalid
     if (!segment) {
-        return "Invalid selection";
+        return "잘못된 조합 선택 입니다";
     }
 
-    // Determine which digit index this column belongs to (0-5)
-    const digitIndex = "ABC".includes(column) ? 0 :
-                       "DEF".includes(column) ? 1 :
-                       "GHI".includes(column) ? 2 : 
-                       "ABC".includes(column) ? 3 :
-                       "DEF".includes(column) ? 4 : 5;
+    const digitIndex = "ABC".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 0 : 3) :
+                       "DEF".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 1 : 4) :
+                       "GHI".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 2 : 5) : -1;
 
-    // Get the number from the hiddenDigits array
+    if (digitIndex === -1) {
+        return "잘못된 조합 선택 입니다";
+    }
+
     const digit = hiddenDigits[digitIndex];
 
-    // Check if the segment is on
-    return digitSegments[digit].includes(segment) ? "Filled" : "Not Filled";
+    const actualSegment = segment.split('-')[2];
+
+    return digitSegments[digit].includes(actualSegment) ? "네, 채워져 있습니다" : "아니요, 빈칸 입니다";
 }
 
-// Function to handle the question and update UI
+
 function handleSegmentFilledQuestion() {
     const column = document.getElementById('column-value').value;
     const row = document.getElementById('row-value').value;
     
     const result = isSegmentFilled(column, row);
 
-    // Display the result
-    document.getElementById('question-output').innerText = `Q: Is ${column}-${row} filled? A: ${result}`;
+    document.getElementById('question-output').innerText = `Q: ${column}-${row} 는 채워져 있나요? A: ${result}`;
 
-    // Add the answer to history
     const historyPanel = document.getElementById('history-panel');
     const answerEntry = document.createElement('div');
-    answerEntry.innerText = `Q: Is ${column}-${row} filled? A: ${result}`;
+    answerEntry.innerText = `Q: ${column}-${row} 는 채워져 있나요? A: ${result}`;
     historyPanel.appendChild(answerEntry);
 
-    // Automatically scroll to the bottom of the history panel
     historyPanel.scrollTop = historyPanel.scrollHeight;
 }
 
 
+function checkUserInput() {
+    const userInput = document.getElementById("user-input").value;
+    const resultDisplay = document.getElementById("match-result");
+
+    if (!numberGenerated) {
+        resultDisplay.innerText = "숫자가 생성되지 않았습니다!";
+        return;
+    }
+
+    if (userInput.length !== 6 || isNaN(userInput)) {
+        resultDisplay.innerText = "6자리 숫자를 입력하세요!";
+        return;
+    }
+
+    if (userInput === hiddenDigits.join('')) {
+        resultDisplay.innerText = "정답!";
+        resultDisplay.style.color = "yellow";
+    } else {
+        resultDisplay.innerText = "오답!";
+        resultDisplay.style.color = "red";
+    }
+}
 
     </script>
 </body>
