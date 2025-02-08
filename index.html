@@ -1,300 +1,487 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Digit Code</title>
-      <style>
-         .top div {  
-         font-size: 35px;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         color: #004d45;
-         } 
-         .top div a {  
-         color: #004d45;
-         font-size: 18px;
-         text-decoration: unset;
-         } 
-         .top {
-         background-color: #fcf6d6;
-         width: 100%;
-         position: sticky;
-         top: 0;
-         z-index: 1;
-         display: flex;
-         flex-direction: column;
-         align-items: center;
-         justify-content: center;
-         height: 80px; /* Fix the height to prevent shifting */
-         padding: 10px 0;
-         overflow: hidden; /* Prevent content from affecting height */
-         }
-         .top div {
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         }
-         .store-link {
-         white-space: nowrap; /* Prevent wrapping */
-         }
-         .lang-buttons {
-         position: absolute;
-         top: 10px;
-         right: 15px;
-         display: flex;
-         gap: 5px; /* Space between buttons */
-         }
-         .lang-btn {
-         padding: 3px 6px;
-         font-size: 12px;
-         border: 1px solid #ccc;
-         background: white;
-         cursor: pointer;
-         white-space: nowrap; /* Prevents text from wrapping */
-         color: black;
-         }
-         body {
-         background: #077b4c;
-         display: flex;
-         flex-direction: column;
-         /*            justify-content: center; /* This might not be needed anymore */
-         align-items: center; /* This might not be needed anymore */*/
-         height: 100vh;
-         margin: 0; /* Remove the default body margin */
-         }
-         .board {
-         display: grid;
-         grid-template-columns: repeat(3, auto);
-         gap: 40px;
-         justify-content: center;
-         background: #f3f3f3;
-         padding: 30px 70px 30px 70px;
-         border-radius: 10px;
-         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-         }
-         .digit {
-         display: flex;
-         position: relative;
-         width: 28px;
-         height: 50px;
-         margin: 0 4px;
-         }
-         .digit span {
-         opacity: 0;
-         position: absolute;
-         background-color: #272e38;
-         transition: 0.25s;
-         }
-         .digit span:before,
-         .digit span:after {
-         content: '';
-         position: absolute;
-         width: 0;
-         height: 0;
-         border: 5px solid transparent;
-         }
-         .digit .d1 {
-         height: 5px;
-         width: 16px;
-         top: 0;
-         left: 6px;
-         }
-         .digit .d1:before {
-         border-width: 0 5px 5px 0;
-         border-right-color: inherit;
-         left: -5px;
-         }
-         .digit .d1:after {
-         border-width: 0 0 5px 5px;
-         border-left-color: inherit;
-         right: -5px;
-         }
-         .digit .d2 {
-         height: 5px;
-         width: 16px;
-         top: 24px;
-         left: 6px;
-         }
-         .digit .d2:before {
-         border-width: 3px 4px 2px;
-         border-right-color: inherit;
-         left: -8px;
-         }
-         .digit .d2:after {
-         border-width: 3px 4px 2px;
-         border-left-color: inherit;
-         right: -8px;
-         }
-         .digit .d3 {
-         height: 5px;
-         width: 16px;
-         top: 48px;
-         left: 6px;
-         }
-         .digit .d3:before {
-         border-width: 5px 5px 0 0;
-         border-right-color: inherit;
-         left: -5px;
-         }
-         .digit .d3:after {
-         border-width: 5px 0 0 5px;
-         border-left-color: inherit;
-         right: -5px;
-         }
-         .digit .d4 {
-         width: 5px;
-         height: 14px;
-         top: 7px;
-         left: 0;
-         }
-         .digit .d4:before {
-         border-width: 0 5px 5px 0;
-         border-bottom-color: inherit;
-         top: -5px;
-         }
-         .digit .d4:after {
-         border-width: 0 0 5px 5px;
-         border-left-color: inherit;
-         bottom: -5px;
-         }
-         .digit .d5 {
-         width: 5px;
-         height: 14px;
-         top: 7px;
-         right: 0;
-         }
-         .digit .d5:before {
-         border-width: 0 0 5px 5px;
-         border-bottom-color: inherit;
-         top: -5px;
-         }
-         .digit .d5:after {
-         border-width: 5px 0 0 5px;
-         border-top-color: inherit;
-         bottom: -5px;
-         }
-         .digit .d6 {
-         width: 5px;
-         height: 14px;
-         top: 32px;
-         left: 0;
-         }
-         .digit .d6:before {
-         border-width: 0 5px 5px 0;
-         border-bottom-color: inherit;
-         top: -5px;
-         }
-         .digit .d6:after {
-         border-width: 0 0 5px 5px;
-         border-left-color: inherit;
-         bottom: -5px;
-         }
-         .digit .d7 {
-         width: 5px;
-         height: 14px;
-         top: 32px;
-         right: 0;
-         }
-         .digit .d7:before {
-         border-width: 0 0 5px 5px;
-         border-bottom-color: inherit;
-         top: -5px;
-         }
-         .digit .d7:after {
-         border-width: 5px 0 0 5px;
-         border-top-color: inherit;
-         bottom: -5px;
-         }
-         .digit span.on {
-         opacity: 1;
-         }
-         button {
-         margin: 10px;
-         padding: 10px 20px;
-         font-size: 16px;
-         color: white;
-         background-color: #272e38;
-         border: none;
-         border-radius: 5px;
-         cursor: pointer;
-         }
-         button:hover {
-         background-color: #444;
-         }
-         .button-group { /* Style the button container */
-         display: flex; /* Arrange buttons horizontally */
-         gap: 10px;      /* Add some space between buttons */
-         }
-         #hidden-number, #question-output {
-         margin-top: 10px;
-         color: white;
-         font-size: 14px;
-         }
-         .question-input {
-         margin-top: 5px;
-         display: flex;
-         align-items: center;
-         gap: 5px;
-         background-color: #fcf6d6;  
-         padding: 2px 5px 2px 5px; 
-         border-radius: 10px;
-         width: 350px;
-         justify-content: center;
-         font-size: 14px;
-         }
-         .question-input select, .question-input button {
-         padding: 5px;
-         font-size: 14px;
-         }
-         #history-panel {
-         margin: 10px 0; max-height: 5em; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; width: 350px; font-size: 13px;
-         }
-         #match-result {
-         font-size: 18px;
-         font-weight: bold;
-         margin-left: 10px;
-         color: white;
-         }
-         .lang-btn { margin: 1px; cursor: pointer; padding: 1px 2px; border: 1px solid #ccc; }
-         button:disabled {
-         background-color: #aaa; /* Greyed out */
-         cursor: not-allowed;
-         opacity: 0.6;
-         }
-      </style>
-   </head>
-   <body>
-      <section class="top">
-         <div id="title"></div>
-         <div><a href="https://smartstore.naver.com/playte" id="store-link" class="store-link"></a></div>
-         <div class="lang-buttons">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digit Code</title>
+    <style>
+        .top div {  
+          font-size: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #004d45;
+        } 
+
+        .top div a {  
+          color: #004d45;
+          font-size: 18px;
+          text-decoration: unset;
+          margin-bottom: 25px;
+        } 
+.top {
+    background-color: #fcf6d6;
+    width: 100%;
+/*    position: sticky;*/
+    top: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90px; /* Fix the height to prevent shifting */
+    padding: 10px 0;
+    overflow: hidden; /* Prevent content from affecting height */
+}
+
+.top div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.store-link {
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.lang-buttons {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    display: flex;
+    gap: 5px; /* Space between buttons */
+}
+
+.lang-btn {
+    padding: 3px 6px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    white-space: nowrap; /* Prevents text from wrapping */
+    color: black;
+}
+
+
+
+        body {
+            background: #077b4c;
+            display: flex;
+            flex-direction: column;
+/*            justify-content: center; /* This might not be needed anymore */
+            align-items: center; /* This might not be needed anymore */*/
+            height: 100vh;
+            margin: 0; /* Remove the default body margin */
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 40px;
+            justify-content: center;
+            background: #f3f3f3;
+            padding: 30px 70px 30px 70px;
+
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .digit {
+            display: flex;
+            position: relative;
+            width: 28px;
+            height: 50px;
+            margin: 0 4px;
+        }
+        .digit span {
+            opacity: 0;
+            position: absolute;
+            background-color: #272e38;
+            transition: 0.25s;
+        }
+        .digit span:before,
+        .digit span:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 5px solid transparent;
+        }
+
+        .digit .d1 {
+            height: 5px;
+            width: 16px;
+            top: 0;
+            left: 6px;
+        }
+        .digit .d1:before {
+            border-width: 0 5px 5px 0;
+            border-right-color: inherit;
+            left: -5px;
+        }
+        .digit .d1:after {
+            border-width: 0 0 5px 5px;
+            border-left-color: inherit;
+            right: -5px;
+        }
+
+        .digit .d2 {
+            height: 5px;
+            width: 16px;
+            top: 24px;
+            left: 6px;
+        }
+        .digit .d2:before {
+            border-width: 3px 4px 2px;
+            border-right-color: inherit;
+            left: -8px;
+        }
+        .digit .d2:after {
+            border-width: 3px 4px 2px;
+            border-left-color: inherit;
+            right: -8px;
+        }
+
+        .digit .d3 {
+            height: 5px;
+            width: 16px;
+            top: 48px;
+            left: 6px;
+        }
+        .digit .d3:before {
+            border-width: 5px 5px 0 0;
+            border-right-color: inherit;
+            left: -5px;
+        }
+        .digit .d3:after {
+            border-width: 5px 0 0 5px;
+            border-left-color: inherit;
+            right: -5px;
+        }
+
+        .digit .d4 {
+            width: 5px;
+            height: 14px;
+            top: 7px;
+            left: 0;
+        }
+        .digit .d4:before {
+            border-width: 0 5px 5px 0;
+            border-bottom-color: inherit;
+            top: -5px;
+        }
+        .digit .d4:after {
+            border-width: 0 0 5px 5px;
+            border-left-color: inherit;
+            bottom: -5px;
+        }
+
+        .digit .d5 {
+            width: 5px;
+            height: 14px;
+            top: 7px;
+            right: 0;
+        }
+        .digit .d5:before {
+            border-width: 0 0 5px 5px;
+            border-bottom-color: inherit;
+            top: -5px;
+        }
+        .digit .d5:after {
+            border-width: 5px 0 0 5px;
+            border-top-color: inherit;
+            bottom: -5px;
+        }
+
+        .digit .d6 {
+            width: 5px;
+            height: 14px;
+            top: 32px;
+            left: 0;
+        }
+        .digit .d6:before {
+            border-width: 0 5px 5px 0;
+            border-bottom-color: inherit;
+            top: -5px;
+        }
+        .digit .d6:after {
+            border-width: 0 0 5px 5px;
+            border-left-color: inherit;
+            bottom: -5px;
+        }
+
+        .digit .d7 {
+            width: 5px;
+            height: 14px;
+            top: 32px;
+            right: 0;
+        }
+        .digit .d7:before {
+            border-width: 0 0 5px 5px;
+            border-bottom-color: inherit;
+            top: -5px;
+        }
+        .digit .d7:after {
+            border-width: 5px 0 0 5px;
+            border-top-color: inherit;
+            bottom: -5px;
+        }
+
+        .digit span.on {
+            opacity: 1;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #272e38;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping if needed */
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* Default button styling */
+#btn-check {
+    padding: 4px 10px; /* Reduce padding */
+    font-size: 14px;
+    height: 30px; /* Default height */
+}
+
+  /* Default select dropdown styling */
+  .question-input select {
+      padding: 5px 10px;
+      font-size: 14px;
+      height: 30px;
+  }
+        
+
+.answer-input {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Add space between elements */
+    flex-wrap: wrap; /* Prevents overflow on small screens */
+    max-width: 100%; /* Ensures it doesn’t exceed its parent */
+}
+
+#match-result {
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden; /* Prevents content from going under */
+    text-overflow: ellipsis; /* Adds "..." if too long */
+    max-width: 120px; /* Limits size to prevent breaking */
+    display: inline-block; /* Ensures it stays in the same line */
+}
+
+.answer-input {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Adds space between elements */
+    flex-wrap: wrap; /* Prevents overflow in small screens */
+    max-width: 100%; /* Ensures responsiveness */
+}
+
+#user-input {
+    flex-grow: 1; /* Makes input take available space */
+    max-width: 140px; /* Prevents it from being too small */
+    padding: 5px 8px;
+    font-size: 14px;
+}
+
+#btn-check {
+    padding: 4px 8px; /* Makes button slimmer */
+    font-size: 14px; /* Adjusts font for better mobile fit */
+    height: 30px; /* Controls button height */
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
+#match-result {
+    white-space: nowrap; /* Prevents breaking into the next row */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds "..." if too long */
+    max-width: 120px; /* Ensures it doesn't overflow */
+    display: inline-block; /* Keeps it in the same row */
+}
+
+    #question-output {
+        display: hidden;
+        color: white;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+
+/* Mobile-specific adjustments */
+@media (max-width: 600px) {
+
+    .answer-input {
+      height: 40px;
+    }
+
+    .question-input {
+      height: 30px;
+    }
+    .question-input select {
+        padding: 2px 6px; /* Reduce padding */
+        font-size: 12px; /* Make text smaller */
+        height: 22px; /* Reduce height */
+    }
+
+    .board {
+        gap: 25px;
+        padding: 15px 50px 15px 50px;
+    }
+
+    #btn-check {
+        padding: 2px 6px; /* Make it slimmer */
+        font-size: 12px; /* Slightly smaller text */
+        height: 26px; /* Reduce height */
+    }
+
+@media (max-width: 480px) {
+    .button-group {
+        display: flex;
+        gap: 3px; /* Reduce the gap further in mobile */
+        flex-wrap: wrap; /* Ensure buttons wrap properly */
+        justify-content: center;
+    }
+
+    .button-group button {
+        min-width: auto; /* Allow buttons to size dynamically */
+        padding: 6px 10px; /* Reduce padding for smaller buttons */
+        font-size: 12px; /* Reduce font size slightly */
+    }
+}
+
+
+    .seed-container input {
+      height: 15px;
+      width: 80px;
+    }
+/*    .button-group button,*/
+    .seed-container button {
+        padding: 5px 8px;
+        font-size: 16px;
+        height: 30px;
+    }
+
+    .seed-container {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .seed-container input {
+        width: 120px; /* Adjust input width */
+        text-align: center;
+    }
+}
+
+
+       #hidden-number {
+            margin-top: 10px;
+            color: white;
+            font-size: 14px;
+        }
+        .question-input {
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #fcf6d6;  
+            padding: 2px 5px 2px 5px; 
+            border-radius: 10px;
+            width: 350px;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .question-input button {
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        #history-panel {
+          margin: 10px 0; max-height: 5em; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; width: 350px; font-size: 13px;
+        }
+
+        #match-result {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 10px;
+    color: white;
+}
+
+.lang-btn { margin: 1px; cursor: pointer; padding: 1px 2px; border: 1px solid #ccc; }
+
+button:disabled {
+    background-color: #aaa; /* Greyed out */
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#generated-seed {
+    position: absolute;
+    top: 78px; 
+    left: 50%;
+    transform: translateX(-50%); /* Center it */
+    font-size: 14px;
+    color: #004d45;
+    display: hidden; /* Initially hidden */
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+
+    </style>
+</head>
+
+<body>
+    <section class="top">
+        <div id="title"></div>
+        <div><a href="https://smartstore.naver.com/playte" id="store-link" class="store-link"></a></div>
+        <span id="generated-seed" style="display: hidden; margin-top: 5px; font-size: 14px; color: #004d45;"></span>
+        <div class="lang-buttons">
             <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
             <button class="lang-btn" onclick="changeLanguage('ko')">KO</button>
-         </div>
-      </section>
-      <div class="button-group">
-         <button onclick="revealDigits()" id="btn-reveal"></button>
-         <button onclick="hideDigits()" id="btn-hide"></button>
-         <button onclick="generateRandomDigitsWithRules()" id="btn-generate"></button>
-      </div>
-      <div class="board" id="digit-board">
-         <div class="digit" id="digit-1"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
-         <div class="digit" id="digit-2"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
-         <div class="digit" id="digit-3"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
-         <div class="digit" id="digit-4"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
-         <div class="digit" id="digit-5"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
-         <div class="digit" id="digit-6"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
-      </div>
-      <div class="answer-input">
-         <label for="user-input" id="label-answer"></label>
-         <input type="text" id="user-input" maxlength="6" pattern="\d{6}" placeholder="">
-         <button onclick="checkUserInput()" id="btn-check"></button>
-         <span id="match-result"></span>
-      </div>
-      <div class="question-input">
-         <select id="row-col-value">
+        </div>
+    </section>
+    <div class="button-group">
+        <button id="btn-toggle-visibility" onclick="toggleVisibility()"></button>
+        <button onclick="generateRandomDigitsWithRules()" id="btn-generate"></button>
+        <!-- Moved inside button-group for inline layout -->
+        <div class="seed-container">
+            <input type="text" id="seed-input" placeholder="Enter seed">
+            <button onclick="loadDigitsFromSeed()">Load</button>
+        </div>
+    </div>
+    </div>
+    <div class="board" id="digit-board">
+        <div class="digit" id="digit-1"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+        <div class="digit" id="digit-2"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+        <div class="digit" id="digit-3"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+        <div class="digit" id="digit-4"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+        <div class="digit" id="digit-5"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+        <div class="digit" id="digit-6"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span></div>
+    </div>
+    <div class="answer-input">
+        <input type="text" id="user-input" maxlength="6" pattern="\d{6}">
+        <button onclick="checkUserInput()" id="btn-check"></button>
+        <span id="match-result"></span>
+    </div>
+    <div class="question-input">
+        <select id="row-col-value">
             <option value="A">A</option>
             <option value="B">B</option>
             <option value="C">C</option>
@@ -314,24 +501,24 @@
             <option value="Q">Q</option>
             <option value="R">R</option>
             <option value="S">S</option>
-         </select>
-         <label id="label-how-many"></label>
-         <button id="btn-ask" onclick="handleHowManyQuestion()"></button>
-      </div>
-      <div class="question-input">
-         <select id="digit-value">
+        </select>
+        <label id="label-how-many"></label>
+        <button class="btn-ask" onclick="handleHowManyQuestion()"></button>
+    </div>
+    <div class="question-input">
+        <select id="digit-value">
             <option value="T">(T)</option>
             <option value="U">(U)</option>
             <option value="V">(V)</option>
             <option value="W">(W)</option>
             <option value="X">(X)</option>
             <option value="Y">(Y)</option>
-         </select>
-         <label for="digit-value" id="label-even-odd"></label>
-         <button class="btn-ask" onclick="handleDigitEvenOddQuestion()"></button>
-      </div>
-      <div class="question-input">
-         <select id="digit-pair">
+        </select>
+        <label for="digit-value" id="label-even-odd"></label>
+        <button class="btn-ask" onclick="handleDigitEvenOddQuestion()"></button>
+    </div>
+    <div class="question-input">
+        <select id="digit-pair">
             <option value="T-U">(T-U)</option>
             <option value="U-V">(U-V)</option>
             <option value="W-X">(W-X)</option>
@@ -339,12 +526,12 @@
             <option value="T-W">(T-W)</option>
             <option value="U-X">(U-X)</option>
             <option value="V-Y">(V-Y)</option>
-         </select>
-         <label for="digit-pair" id="label-comparison"></label>
-         <button class="btn-ask" onclick="handleComparisonQuestion()"></button>
-      </div>
-      <div class="question-input">
-         <select id="column-value">
+        </select>
+        <label for="digit-pair" id="label-comparison"></label>
+        <button class="btn-ask" onclick="handleComparisonQuestion()"></button>
+    </div>
+    <div class="question-input">
+        <select id="column-value">
             <option value="A">A</option>
             <option value="B">B</option>
             <option value="C">C</option>
@@ -354,8 +541,8 @@
             <option value="G">G</option>
             <option value="H">H</option>
             <option value="I">I</option>
-         </select>
-         <select id="row-value">
+        </select>
+        <select id="row-value">
             <option value="J">J</option>
             <option value="K">K</option>
             <option value="L">L</option>
@@ -366,586 +553,816 @@
             <option value="Q">Q</option>
             <option value="R">R</option>
             <option value="S">S</option>
-         </select>
-         <label id="label-segment"></label>
-         <button class="btn-ask" onclick="handleSegmentFilledQuestion()"></button>
-      </div>
-      <div id="history-panel" style=""></div>
-      <div id="question-output"></div>
-      <div class="question-output" id="question-output"></div>
-      <script id="translations" type="application/json">
-         {
-             "en": {
-                 "title": "DIGIT CODE",
-                 "store-link": "Purchase DIGIT CODE - Playte Store",
-                 "btn-reveal": "Reveal",
-                 "btn-hide": "Hide",
-                 "btn-generate": "Generate",
-                 "label-answer": "Answer:",
-                 "btn-check": "Check",
-                 "placeholder-answer": "Enter a 6-digit number",
-                 "msg-no-number": "No numbers generated!",
-                 "msg-invalid-input": "Enter a 6-digit number!",
-                 "msg-correct": "Correct!",
-                 "msg-wrong": "Wrong!",
-                 "msg-even": "Even",
-                 "msg-odd": "Odd",
-                 "msg-invalid-input-error": "Invalid Input!",
-                 "msg-how-many": "How many spaces are filled in {letter}?",
-                 "msg-answer-how-many": "Q: How many spaces are filled in {letter}? A: {count}",
-                 "msg-even-odd-question": "Is it even or odd?",
-                 "msg-even-odd-result": "Is ({digitLetter}) even or odd? {parity}.",
-                 "msg-even-odd-history": "Q: Is {digitLetter} even or odd? A: {parity}.",
-                 "msg-first-greater": "{firstDigit} is greater.",
-                 "msg-second-greater": "{secondDigit} is greater.",
-                 "msg-comparison-history": "Q: Which is greater, {firstDigit} or {secondDigit}? A: {resultText}",
-                 "msg-invalid-selection": "Invalid selection.",
-                 "msg-segment-filled": "Yes, it is filled.",
-                 "msg-segment-empty": "No, it is empty.",
-                 "msg-segment-question": "Q: Is {column}-{row} filled? A: {result}",
-                 "msg-segment-history": "Q: Is {column}-{row} filled? A: {result}",
-                 "label-how-many": "How many spaces are filled in {value}?",
-                 "label-even-odd": "Is {digit} even or odd?",
-                 "label-comparison": "Which is greater, {pair}?",
-                 "label-segment": "Is ({column}, {row}) filled?",
-                 "btn-ask": "Ask"
-             },
-             "ko": {
-                 "title": "디지트 코드",
-                 "store-link": "디지트 코드 구매 - Playte Store",
-                 "btn-reveal": "공개",
-                 "btn-hide": "숨기기",
-                 "btn-generate": "생성",
-                 "label-answer": "정답 입력:",
-                 "btn-check": "맞춰보기",
-                 "placeholder-answer": "6자리 숫자를 입력하세요",
-                 "msg-no-number": "숫자가 생성되지 않았습니다!",
-                 "msg-invalid-input": "6자리 숫자를 입력하세요!",
-                 "msg-correct": "정답!",
-                 "msg-wrong": "오답!",
-                 "msg-even": "짝수",
-                 "msg-odd": "홀수",
-                 "msg-invalid-input-error": "잘못된 입력입니다!",
-                 "msg-how-many": "{letter}에는 몇 칸이 채워져 있나요?",
-                 "msg-answer-how-many": "Q: {letter}에는 몇 칸이 채워져 있나요? A: {count}",
-                 "msg-even-odd-question": "짝수인가요 홀수인가요?",
-                 "msg-even-odd-result": "({digitLetter})는 {parity}입니다.",
-                 "msg-even-odd-history": "Q: {digitLetter}는 짝수인가요 홀수인가요? A: {parity}.",
-                 "msg-first-greater": "{firstDigit} 가 더 큽니다.",
-                 "msg-second-greater": "{secondDigit} 가 더 큽니다.",
-                 "msg-comparison-history": "Q: {firstDigit} 와 {secondDigit} 중에 어떤게 더 큰가요? A: {resultText}",
-                 "msg-invalid-selection": "잘못된 조합 선택 입니다.",
-                 "msg-segment-filled": "네, 채워져 있습니다.",
-                 "msg-segment-empty": "아니요, 빈칸 입니다.",
-                 "msg-segment-question": "Q: {column}-{row} 는 채워져 있나요? A: {result}",
-                 "msg-segment-history": "Q: {column}-{row} 는 채워져 있나요? A: {result}",
-                 "label-how-many": "{value}에는 몇 칸이 채워져 있나요?",
-                 "label-even-odd": "{digit}는 짝수인가요 홀수인가요?",
-                 "label-comparison": "{pair} 중 어떤게 더 큰가요?",
-                 "label-segment": "{column}, {row} 칸은 채워져 있나요?",
-                 "btn-ask": "물어보기"
-             }
-         }
-         
-         
-             
-      </script>
-      <script>
-         let hiddenDigits = [];
-         let numberGenerated = false;
-         
-         const digitSegments = {
-             0: ['d1', 'd3', 'd4', 'd5', 'd6', 'd7'],
-             1: ['d5', 'd7'],
-             2: ['d1', 'd2', 'd3', 'd5', 'd6'],
-             3: ['d1', 'd2', 'd3', 'd5', 'd7'],
-             4: ['d2', 'd4', 'd5', 'd7'],
-             5: ['d1', 'd2', 'd3', 'd4', 'd7'],
-             6: ['d1', 'd2', 'd3', 'd4', 'd6', 'd7'],
-             7: ['d1', 'd5', 'd7'],
-             8: ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7'],
-             9: ['d1', 'd2', 'd3', 'd4', 'd5', 'd7']
-         };
-         
-         function clearSegments(digitId) {
-             document.querySelectorAll(`#${digitId} span`).forEach(span => span.classList.remove('on'));
-         }
-         
-         function lightUpDigit(digitId, number) {
-             clearSegments(digitId);
-             digitSegments[number].forEach(segment => {
-                 document.querySelector(`#${digitId} .${segment}`).classList.add('on');
-             });
-         }
-         function generateRandomDigitsWithRules() {
-         const lang = localStorage.getItem("language") || "en";
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         hiddenDigits = [];
-         numberGenerated = true;
-         setButtonsState(true);  // Enable buttons after generating numbers
-         
-         const usedNumbers = Array(10).fill(0);
-         for (let i = 0; i < 6; i++) {
-         let randomDigit;
-         do {
-             randomDigit = Math.floor(Math.random() * 10);
-         } while (
-             usedNumbers[randomDigit] === 2 ||
-             (i > 0 && hiddenDigits[i - 1] === randomDigit) ||
-             (i >= 3 && hiddenDigits[i - 3] === randomDigit)
-         );
-         hiddenDigits.push(randomDigit);
-         usedNumbers[randomDigit]++;
-         }
-         
-         // Hide match result when new numbers are generated
-         document.getElementById("match-result").innerText = "";
-         document.getElementById("match-result").style.display = "hidden";
-         
-         document.querySelectorAll('.digit span').forEach(span => span.classList.remove('on'));
-         
-         
-         }
-         
-         
-         function revealDigits() {
-             if (!numberGenerated) return;
-         
-             hiddenDigits.forEach((num, index) => {
-                 lightUpDigit(`digit-${index + 1}`, num);
-             });
-         }
-         
-         function hideDigits() {
-         if (!numberGenerated) return;
-         
-         hiddenDigits.forEach((num, index) => {
-         const digitId = `digit-${index + 1}`;
-         clearSegments(digitId);
-         });
-         }
-         
-         function calculateFilledSpaces(letter) {
-         let count = 0;
-         
-         const columnMapping = {
-         'A': ['d4', 'd6'],
-         'B': ['d1', 'd2', 'd3'],
-         'C': ['d5', 'd7'],
-         'D': ['d4', 'd6'],
-         'E': ['d1', 'd2', 'd3'],
-         'F': ['d5', 'd7'],
-         'G': ['d4', 'd6'],
-         'H': ['d1', 'd2', 'd3'],
-         'I': ['d5', 'd7']
-         };
-         
-         const rowMapping = {
-         'J': ['d1'],
-         'K': ['d4', 'd5'],
-         'L': ['d2'],
-         'M': ['d6', 'd7'],
-         'N': ['d3'],
-         'O': ['d1'],
-         'P': ['d4', 'd5'],
-         'Q': ['d2'],
-         'R': ['d6', 'd7'],
-         'S': ['d3']
-         };
-         
-         hiddenDigits.forEach((digit, index) => {
-         let segments = digitSegments[digit];
-         
-         if (columnMapping[letter] && index % 3 === Math.floor((letter.charCodeAt(0) - 65) / 3)) {
-             columnMapping[letter].forEach(segment => {
-                 if (segments.includes(segment)) count++;
-             });
-         }
-         
-         if (rowMapping[letter]) {
-             const isUpperRow = index < 3;
-             const isLowerRow = index >= 3;
-             if ((isUpperRow && 'JKLMN'.includes(letter)) || (isLowerRow && 'OPQRS'.includes(letter))) {
-                 rowMapping[letter].forEach(segment => {
-                     if (segments.includes(segment)) count++;
-                 });
-             }
-         }
-         });
-         
-         return count;
-         }
-         
-         // function isDigitEvenOrOdd(letter) {
-         //   console.log("isDigitEvenOrOdd....");
-         //     const letterMapping = { 'T': 0, 'U': 1, 'V': 2, 'W': 3, 'X': 4, 'Y': 5 };
-         //     const index = letterMapping[letter];
-         
-         //     if (index !== undefined && hiddenDigits[index] !== undefined) {
-         //         return hiddenDigits[index] % 2 === 0 ? translations[lang]["msg-even"] : translations[lang]["msg-odd"];
-         //     }
-         //     console.log(translations[lang]["msg-invalid-input-error"]);
-         //     return translations[lang]["msg-invalid-input-error"];
-         // }
-         
-         
-         function handleDigitEvenOddQuestion() {
-         const lang = localStorage.getItem("language") || "en";
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         const digitLetter = document.getElementById('digit-value').value;
-         const digitIndex = digitLetter.charCodeAt(0) - 'T'.charCodeAt(0);
-         
-         if (digitIndex < 0 || digitIndex >= hiddenDigits.length) {
-         document.getElementById('question-output').innerText = translations[lang]["msg-invalid-input-error"];
-         return;
-         }
-         
-         const digit = hiddenDigits[digitIndex];
-         const parity = digit % 2 === 0 ? translations[lang]["msg-even"] : translations[lang]["msg-odd"];
-         
-         // Template replacement for correct word order
-         const outputText = translations[lang]["msg-even-odd-result"]
-         .replace("{digitLetter}", digitLetter)
-         .replace("{parity}", parity);
-         
-         document.getElementById('question-output').innerText = outputText;
-         
-         const historyPanel = document.getElementById('history-panel');
-         const answerEntry = document.createElement('div');
-         answerEntry.innerText = translations[lang]["msg-even-odd-history"]
-         .replace("{digitLetter}", digitLetter)
-         .replace("{parity}", parity);
-         
-         historyPanel.appendChild(answerEntry);
-         historyPanel.scrollTop = historyPanel.scrollHeight;
-         }
-         
-         
-         
-         function handleHowManyQuestion() {
-         const lang = localStorage.getItem("language") || "en";
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         const letter = document.getElementById('row-col-value').value;
-         const filledCount = calculateFilledSpaces(letter);
-         
-         // 템플릿을 사용하여 문장 생성
-         const outputText = translations[lang]["msg-how-many"].replace("{letter}", letter);
-         document.getElementById('question-output').innerText = outputText;
-         
-         const historyPanel = document.getElementById('history-panel');
-         const answerEntry = document.createElement('div');
-         answerEntry.innerText = translations[lang]["msg-answer-how-many"]
-         .replace("{letter}", letter)
-         .replace("{count}", filledCount);
-         
-         historyPanel.appendChild(answerEntry);
-         historyPanel.scrollTop = historyPanel.scrollHeight;
-         }
-         
-         
-         
-         function updateSecondDigitOptions() {
-         const firstDigit = document.getElementById('first-digit').value;
-         const secondDigitDropdown = document.getElementById('second-digit');
-         secondDigitDropdown.innerHTML = ''; // Clear previous options
-         
-         const adjacentPairs = {
-         'T': ['U', 'W'],
-         'U': ['T', 'V', 'X'],
-         'V': ['U', 'W', 'Y'],
-         'W': ['V', 'T', 'X'],
-         'X': ['U', 'W', 'Y'],
-         'Y': ['V', 'X']
-         };
-         
-         adjacentPairs[firstDigit].forEach(adjacent => {
-         let option = document.createElement('option');
-         option.value = adjacent;
-         option.textContent = `(${adjacent})`;
-         secondDigitDropdown.appendChild(option);
-         });
-         }
-         
-         function handleComparisonQuestion() {
-         const lang = localStorage.getItem("language") || "en";
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         const selectedPair = document.getElementById("digit-pair").value;
-         const [firstDigit, secondDigit] = selectedPair.split("-");
-         
-         const firstIndex = firstDigit.charCodeAt(0) - "T".charCodeAt(0);
-         const secondIndex = secondDigit.charCodeAt(0) - "T".charCodeAt(0);
-         
-         let resultKey;
-         if (hiddenDigits[firstIndex] > hiddenDigits[secondIndex]) {
-         resultKey = "msg-first-greater";
-         } else if (hiddenDigits[firstIndex] < hiddenDigits[secondIndex]) {
-         resultKey = "msg-second-greater";
-         } else {
-         resultKey = "msg-generate-first";
-         }
-         
-         // 템플릿을 활용한 언어별 문장 구성
-         const resultText = translations[lang][resultKey]
-         .replace("{firstDigit}", firstDigit)
-         .replace("{secondDigit}", secondDigit);
-         
-         document.getElementById('question-output').innerText = resultText;
-         
-         const historyPanel = document.getElementById('history-panel');
-         const answerEntry = document.createElement('div');
-         answerEntry.innerText = translations[lang]["msg-comparison-history"]
-         .replace("{firstDigit}", firstDigit)
-         .replace("{secondDigit}", secondDigit)
-         .replace("{resultText}", resultText);
-         
-         historyPanel.appendChild(answerEntry);
-         historyPanel.scrollTop = historyPanel.scrollHeight;
-         }
-         
-         function isSegmentFilled(column, row) {
-         const lang = localStorage.getItem("language") || "en";
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         
-         const segmentMatrix = {
-         "A-J": null, "B-J": "first-digit-d1", "C-J": null, "D-J": null, "E-J": "second-digit-d1", "F-J": null, "G-J": null, "H-J": "third-digit-d1", "I-J": null,
-         "A-K": "first-digit-d4", "B-K": null, "C-K": "first-digit-d5", "D-K": "second-digit-d4", "E-K": null, "F-K": "second-digit-d5", "G-K": "third-digit-d4", "H-K": null, "I-K": "third-digit-d5",
-         "A-L": null, "B-L": "first-digit-d2", "C-L": null, "D-L": null, "E-L": "second-digit-d2", "F-L": null, "G-L": null, "H-L": "third-digit-d2", "I-L": null,
-         "A-M": "first-digit-d6", "B-M": null, "C-M": "first-digit-d7", "D-M": "second-digit-d6", "E-M": null, "F-M": "second-digit-d7", "G-M": "third-digit-d6", "H-M": null, "I-M": "third-digit-d7",
-         "A-N": null, "B-N": "first-digit-d3", "C-N": null, "D-N": null, "E-N": "second-digit-d3", "F-N": null, "G-N": null, "H-N": "third-digit-d3", "I-N": null,
-         "A-O": null, "B-O": "fourth-digit-d1", "C-O": null, "D-O": null, "E-O": "fifth-digit-d1", "F-O": null, "G-O": null, "H-O": "sixth-digit-d1", "I-O": null,
-         "A-P": "fourth-digit-d4", "B-P": null, "C-P": "fourth-digit-d5", "D-P": "fifth-digit-d4", "E-P": null, "F-P": "fifth-digit-d5", "G-P": "sixth-digit-d4", "H-P": null, "I-P": "sixth-digit-d5",
-         "A-Q": null, "B-Q": "fourth-digit-d2", "C-Q": null, "D-Q": null, "E-Q": "fifth-digit-d2", "F-Q": null, "G-Q": null, "H-Q": "sixth-digit-d2", "I-Q": null,
-         "A-R": "fourth-digit-d6", "B-R": null, "C-R": "fourth-digit-d7", "D-R": "fifth-digit-d6", "E-R": null, "F-R": "fifth-digit-d7", "G-R": "sixth-digit-d6", "H-R": null, "I-R": "sixth-digit-d7",
-         "A-S": null, "B-S": "fourth-digit-d3", "C-S": null, "D-S": null, "E-S": "fifth-digit-d3", "F-S": null, "G-S": null, "H-S": "sixth-digit-d3", "I-S": null,
-         };
-         
-         const key = `${column}-${row}`;
-         const segment = segmentMatrix[key];
-         
-         if (!segment) {
-         return translations[lang]["msg-invalid-selection"];
-         }
-         
-         const digitIndex = "ABC".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 0 : 3) :
-                        "DEF".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 1 : 4) :
-                        "GHI".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 2 : 5) : -1;
-         
-         if (digitIndex === -1) {
-         return translations[lang]["msg-invalid-selection"];
-         }
-         
-         const digit = hiddenDigits[digitIndex];
-         const actualSegment = segment.split('-')[2];
-         
-         const isFilled = digitSegments[digit].includes(actualSegment);
-         return isFilled ? translations[lang]["msg-segment-filled"] : translations[lang]["msg-segment-empty"];
-         }
-         
-         
-         function handleSegmentFilledQuestion() {
-         const lang = localStorage.getItem("language") || "en";
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         const column = document.getElementById('column-value').value;
-         const row = document.getElementById('row-value').value;
-         
-         const result = isSegmentFilled(column, row);
-         
-         const outputText = translations[lang]["msg-segment-question"]
-         .replace("{column}", column)
-         .replace("{row}", row)
-         .replace("{result}", result);
-         
-         document.getElementById('question-output').innerText = outputText;
-         
-         const historyPanel = document.getElementById('history-panel');
-         const answerEntry = document.createElement('div');
-         answerEntry.innerText = translations[lang]["msg-segment-history"]
-         .replace("{column}", column)
-         .replace("{row}", row)
-         .replace("{result}", result);
-         
-         historyPanel.appendChild(answerEntry);
-         historyPanel.scrollTop = historyPanel.scrollHeight;
-         }
-         
-         function changeLanguage(lang) {
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         
-         document.querySelectorAll("[id]").forEach(el => {
-         if (translations[lang][el.id]) {
-             if (el.id === "label-even-odd") {
-                 updateEvenOddLabel(lang);  // Update label dynamically
-             } else if (el.id === "label-comparison") {
-                 updateComparisonLabel(lang);  // Update dynamically
-             } else if (el.id === "label-segment") {
-                 updateSegmentLabel(lang);  // Update dynamically
-             } else if (el.id === "label-how-many") {
-                 updateHowManyLabel(lang);  // Update dynamically
-             } else {
-                 el.textContent = translations[lang][el.id];
-             }
-         }
-         });
-         
-         document.querySelectorAll(".btn-ask").forEach(btn => {
-         btn.textContent = translations[lang]["btn-ask"];
-         });
-         
-         // Set placeholder for input field  
-         document.getElementById("user-input").setAttribute("placeholder", translations[lang]["placeholder-answer"]);
-         
-         localStorage.setItem("language", lang);
-         document.documentElement.lang = lang;
-         }
-         
-         function updateEvenOddLabel(lang) {
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         const digit = document.getElementById("digit-value").value;
-         document.getElementById("label-even-odd").textContent = translations[lang]["label-even-odd"].replace("{digit}", `(${digit})`);
-         }
-         
-         // Add event listener to update when dropdown changes
-         document.getElementById("digit-value").addEventListener("change", function () {
-         const lang = localStorage.getItem("language") || "en";
-         updateEvenOddLabel(lang);
-         });
-         
-         function updateComparisonLabel(lang) {
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         const pair = document.getElementById("digit-pair").value;
-         document.getElementById("label-comparison").textContent = translations[lang]["label-comparison"].replace("{pair}", pair);
-         }
-         
-         // Update label dynamically when dropdown changes
-         document.getElementById("digit-pair").addEventListener("change", function () {
-         const lang = localStorage.getItem("language") || "en";
-         updateComparisonLabel(lang);
-         });
-         
-         
-         
-         function updateSegmentLabel(lang) {
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         const column = document.getElementById("column-value").value;
-         const row = document.getElementById("row-value").value;
-         document.getElementById("label-segment").textContent = translations[lang]["label-segment"]
-         .replace("{column}", column)
-         .replace("{row}", row);
-         }
-         
-         // Update label dynamically when dropdown changes
-         document.getElementById("column-value").addEventListener("change", function () {
-         const lang = localStorage.getItem("language") || "en";
-         updateSegmentLabel(lang);
-         });
-         
-         document.getElementById("row-value").addEventListener("change", function () {
-         const lang = localStorage.getItem("language") || "en";
-         updateSegmentLabel(lang);
-         });
-         
-         function updateHowManyLabel(lang) {
-         const translations = JSON.parse(document.getElementById('translations').textContent);
-         const selectedValue = document.getElementById("row-col-value").value;
-         
-         // Adjust word order based on language
-         let formattedText;
-         if (lang === "en") {
-         formattedText = translations[lang]["label-how-many"].replace("{value}", selectedValue);
-         } else {
-         formattedText = translations[lang]["label-how-many"].replace("{value}", selectedValue);
-         }
-         
-         document.getElementById("label-how-many").textContent = formattedText;
-         }
-         
-         // Update label dynamically when dropdown changes
-         document.getElementById("row-col-value").addEventListener("change", function () {
-         const lang = localStorage.getItem("language") || "en";
-         updateHowManyLabel(lang);
-         });
-         
-         function updateRowOptions() {
-         const column = document.getElementById("column-value").value;
-         const rowSelect = document.getElementById("row-value");
-         
-         const segmentMatrix = {
-         "A-J": null, "B-J": "first-digit-d1", "C-J": null, "D-J": null, "E-J": "second-digit-d1", "F-J": null, "G-J": null, "H-J": "third-digit-d1", "I-J": null,
-         "A-K": "first-digit-d4", "B-K": null, "C-K": "first-digit-d5", "D-K": "second-digit-d4", "E-K": null, "F-K": "second-digit-d5", "G-K": "third-digit-d4", "H-K": null, "I-K": "third-digit-d5",
-         "A-L": null, "B-L": "first-digit-d2", "C-L": null, "D-L": null, "E-L": "second-digit-d2", "F-L": null, "G-L": null, "H-L": "third-digit-d2", "I-L": null,
-         "A-M": "first-digit-d6", "B-M": null, "C-M": "first-digit-d7", "D-M": "second-digit-d6", "E-M": null, "F-M": "second-digit-d7", "G-M": "third-digit-d6", "H-M": null, "I-M": "third-digit-d7",
-         "A-N": null, "B-N": "first-digit-d3", "C-N": null, "D-N": null, "E-N": "second-digit-d3", "F-N": null, "G-N": null, "H-N": "third-digit-d3", "I-N": null,
-         "A-O": null, "B-O": "fourth-digit-d1", "C-O": null, "D-O": null, "E-O": "fifth-digit-d1", "F-O": null, "G-O": null, "H-O": "sixth-digit-d1", "I-O": null,
-         "A-P": "fourth-digit-d4", "B-P": null, "C-P": "fourth-digit-d5", "D-P": "fifth-digit-d4", "E-P": null, "F-P": "fifth-digit-d5", "G-P": "sixth-digit-d4", "H-P": null, "I-P": "sixth-digit-d5",
-         "A-Q": null, "B-Q": "fourth-digit-d2", "C-Q": null, "D-Q": null, "E-Q": "fifth-digit-d2", "F-Q": null, "G-Q": null, "H-Q": "sixth-digit-d2", "I-Q": null,
-         "A-R": "fourth-digit-d6", "B-R": null, "C-R": "fourth-digit-d7", "D-R": "fifth-digit-d6", "E-R": null, "F-R": "fifth-digit-d7", "G-R": "sixth-digit-d6", "H-R": null, "I-R": "sixth-digit-d7",
-         "A-S": null, "B-S": "fourth-digit-d3", "C-S": null, "D-S": null, "E-S": "fifth-digit-d3", "F-S": null, "G-S": null, "H-S": "sixth-digit-d3", "I-S": null,
-         };
-         
-         // Iterate through row options and disable invalid ones
-         Array.from(rowSelect.options).forEach(option => {
-         const row = option.value;
-         const key = `${column}-${row}`;
-         option.disabled = !segmentMatrix[key]; // Disable if no valid segment
-         });
-         
-         // Automatically select the first valid option
-         const firstValidOption = Array.from(rowSelect.options).find(option => !option.disabled);
-         if (firstValidOption) {
-         rowSelect.value = firstValidOption.value;
-         }
-         }
-         
-         // Event listener for column selection change
-         document.getElementById("column-value").addEventListener("change", updateRowOptions);
-         
-         // Run once at the beginning to initialize the valid row options
-         document.addEventListener("DOMContentLoaded", updateRowOptions);
-         
-         
-                 function checkUserInput() {
-             const translations = JSON.parse(document.getElementById('translations').textContent);
-             const lang = localStorage.getItem("language") || "en";
-             const userInput = document.getElementById("user-input").value;
-             const resultDisplay = document.getElementById("match-result");
-         
-             if (!numberGenerated) {
-                 resultDisplay.innerText = translations[lang]["msg-no-number"];
-                 return;
-             }
-         
-             if (userInput.length !== 6 || isNaN(userInput)) {
-                 resultDisplay.innerText = translations[lang]["msg-invalid-input"];
-                 return;
-             }
-         
-             if (userInput === hiddenDigits.join('')) {
-                 resultDisplay.innerText = translations[lang]["msg-correct"];
-                 resultDisplay.style.color = "yellow";
-             } else {
-                 resultDisplay.innerText = translations[lang]["msg-wrong"];
-                 resultDisplay.style.color = "red";
-             }
-         }
-         
-         function setButtonsState(enabled) {
-         document.getElementById("btn-reveal").disabled = !enabled;
-         document.getElementById("btn-hide").disabled = !enabled;
-         document.getElementById("btn-check").disabled = !enabled;
-         document.querySelectorAll(".btn-ask").forEach(btn => {
-         btn.disabled = !enabled;
-         });
-         }
-         
-         
-         
-         const savedLang = localStorage.getItem("language") || "en";
-         document.addEventListener("DOMContentLoaded", () => changeLanguage(savedLang));
-         document.addEventListener("DOMContentLoaded", () => {
-         changeLanguage(savedLang);
-         setButtonsState(false);  // Disable buttons initially
-         });
-         
-      </script>
-   </body>
+        </select>
+        <label id="label-segment"></label>
+        <button class="btn-ask" onclick="handleSegmentFilledQuestion()"></button>
+    </div>
+    <div id="history-panel" style="">
+    </div>
+    <div id="question-output" style="display: hidden;"></div>
+    <script id="translations" type="application/json">
+    {
+        "en": {
+            "title": "DIGIT CODE",
+            "store-link": "Purchase DIGIT CODE - Playte Store",
+            "btn-toggle-visibility": "Reveal",
+            "btn-generate": "Generate",
+            "label-answer": "Answer:",
+            "btn-check": "Check",
+            "placeholder-answer": "6-digit answer here",
+            "msg-no-number": "No numbers generated!",
+            "msg-invalid-input": "Enter a 6-digit number!",
+            "msg-correct": "Correct!",
+            "msg-wrong": "Wrong!",
+            "msg-even": "Even",
+            "msg-odd": "Odd",
+            "msg-invalid-input-error": "Invalid Input!",
+            "msg-how-many": "How many spaces are filled in {letter}?",
+            "msg-answer-how-many": "How many spaces are filled in {letter}? - [ {count} ]",
+            "msg-even-odd-question": "Is it even or odd?",
+            "msg-even-odd-history": "Is {digitLetter} even or odd? - [ {parity} ]",
+            "msg-first-greater": "{firstDigit} is greater",
+            "msg-second-greater": "{secondDigit} is greater",
+            "msg-comparison-history": "Which is greater, {firstDigit} or {secondDigit}? - [ {resultText} ]",
+            "msg-invalid-selection": "Invalid selection.",
+            "msg-segment-filled": "Yes, it is filled",
+            "msg-segment-empty": "No, it is empty",
+            "msg-segment-question": "Is {column}-{row} filled? - [ {result} ]",
+            "msg-segment-history": "Is {column}-{row} filled? - [ {result} ]",
+            "label-how-many": "How many spaces are filled in {value}?",
+            "label-even-odd": "Is {digit} even or odd?",
+            "label-comparison": "Which is greater, {pair}?",
+            "label-segment": "Is ({column}, {row}) filled?",
+            "btn-ask": "Ask",
+            "seed-input-placeholder": "Enter seed",
+            "user-input-placeholder": "6-digit answer here",
+            "btn-load": "Load",
+            "btn-toggle-visibility": "Reveal",
+            "btn-reveal": "Reveal",
+            "btn-hide": "Hide",
+            "msg-confirm-generate": "A number is already generated! Are you sure you want to generate a new one?",
+            "msg-duplicate-question": "You already asked this question!"
+        },
+
+        "ko": {
+            "title": "디지코드",
+            "store-link": "디지코구- Playte Store",
+            "btn-toggle-visibility": "공개",
+            "btn-generate": "생성",
+            "label-answer": "정입력:",
+            "btn-check": "맞춰보기",
+            "placeholder-answer": "6자정답입력하세요.",
+            "msg-no-number": "숫자생성되않았습니다!",
+            "msg-invalid-input": "6자숫자입력하세요!",
+            "msg-correct": "정답!",
+            "msg-wrong": "오답!",
+            "msg-even": "짝수",
+            "msg-odd": "홀수",
+            "msg-invalid-input-error": "잘못입력입니다!",
+            "msg-how-many": "{letter}에칸채워있나요?",
+            "msg-answer-how-many": "{letter}에칸채워있나요? - [ {count} ]",
+            "msg-even-odd-question": "짝수인가홀수인가요?",
+            "msg-even-odd-history": "{digitLetter}짝수인가홀수인가요? - [ {parity} ]",
+            "msg-first-greater": "{firstDigit} 큽니다",
+            "msg-second-greater": "{secondDigit} 큽니다",
+            "msg-comparison-history": "{firstDigit} {secondDigit} 중어떤큰가요? - [ {resultText} ]",
+            "msg-invalid-selection": "잘못조선입니다.",
+            "msg-segment-filled": "네, 채워있습니다",
+            "msg-segment-empty": "아니요, 빈입니다",
+            "msg-segment-question": "{column}-{row} 채워있나요? -[ {result} ]",
+            "msg-segment-history": "{column}-{row} 채워있나요? - [ {result} ]",
+            "label-how-many": "{value}에칸채워있나요?",
+            "label-even-odd": "{digit}짝수인가홀수인가요?",
+            "label-comparison": "{pair} 어떤큰가요?",
+            "label-segment": "{column}, {row} 칸채워있나요?",
+            "btn-ask": "물어보기",
+            "seed-input": "시드입력하세요",
+            "seed-input-placeholder": "시드입력하세요",
+            "user-input-placeholder": "6자정답입력하세요",
+            "btn-load": "불러오기",
+            "btn-toggle-visibility": "공개",
+            "btn-reveal": "공개",
+            "btn-hide": "숨기기",
+            "msg-confirm-generate": "이숫자생성되있습니다! 정숫자생성하시겠습니까?",
+            "msg-duplicate-question": "이질문내용입니다!"
+        }
+    }
+    </script>
+    <script>
+    let hiddenDigits = [];
+    let numberGenerated = false;
+    let seed = ""; // Declare globally so it can be reused
+    const savedLang = localStorage.getItem("language") || "en";
+
+    let translations = {}; // Ensure translations is globally accessible
+    let askedQuestions = new Set(); // Store asked questions to prevent duplicates
+    let questionCount = 0; // Count of unique questions asked
+    let digitsVisible = false; // Track visibility state
+
+    const digitSegments = {
+        0: ['d1', 'd3', 'd4', 'd5', 'd6', 'd7'],
+        1: ['d5', 'd7'],
+        2: ['d1', 'd2', 'd3', 'd5', 'd6'],
+        3: ['d1', 'd2', 'd3', 'd5', 'd7'],
+        4: ['d2', 'd4', 'd5', 'd7'],
+        5: ['d1', 'd2', 'd3', 'd4', 'd7'],
+        6: ['d1', 'd2', 'd3', 'd4', 'd6', 'd7'],
+        7: ['d1', 'd5', 'd7'],
+        8: ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7'],
+        9: ['d1', 'd2', 'd3', 'd4', 'd5', 'd7']
+    };
+
+    const base62Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+
+    const segmentMatrix = { "A-J": null, "B-J": "first-digit-d1", "C-J": null, "D-J": null, "E-J": "second-digit-d1", "F-J": null, "G-J": null, "H-J": "third-digit-d1", "I-J": null, "A-K": "first-digit-d4", "B-K": null, "C-K": "first-digit-d5", "D-K": "second-digit-d4", "E-K": null, "F-K": "second-digit-d5", "G-K": "third-digit-d4", "H-K": null, "I-K": "third-digit-d5", "A-L": null, "B-L": "first-digit-d2", "C-L": null, "D-L": null, "E-L": "second-digit-d2", "F-L": null, "G-L": null, "H-L": "third-digit-d2", "I-L": null, "A-M": "first-digit-d6", "B-M": null, "C-M": "first-digit-d7", "D-M": "second-digit-d6", "E-M": null, "F-M": "second-digit-d7", "G-M": "third-digit-d6", "H-M": null, "I-M": "third-digit-d7", "A-N": null, "B-N": "first-digit-d3", "C-N": null, "D-N": null, "E-N": "second-digit-d3", "F-N": null, "G-N": null, "H-N": "third-digit-d3", "I-N": null, "A-O": null, "B-O": "fourth-digit-d1", "C-O": null, "D-O": null, "E-O": "fifth-digit-d1", "F-O": null, "G-O": null, "H-O": "sixth-digit-d1", "I-O": null, "A-P": "fourth-digit-d4", "B-P": null, "C-P": "fourth-digit-d5", "D-P": "fifth-digit-d4", "E-P": null, "F-P": "fifth-digit-d5", "G-P": "sixth-digit-d4", "H-P": null, "I-P": "sixth-digit-d5", "A-Q": null, "B-Q": "fourth-digit-d2", "C-Q": null, "D-Q": null, "E-Q": "fifth-digit-d2", "F-Q": null, "G-Q": null, "H-Q": "sixth-digit-d2", "I-Q": null, "A-R": "fourth-digit-d6", "B-R": null, "C-R": "fourth-digit-d7", "D-R": "fifth-digit-d6", "E-R": null, "F-R": "fifth-digit-d7", "G-R": "sixth-digit-d6", "H-R": null, "I-R": "sixth-digit-d7", "A-S": null, "B-S": "fourth-digit-d3", "C-S": null, "D-S": null, "E-S": "fifth-digit-d3", "F-S": null, "G-S": null, "H-S": "sixth-digit-d3", "I-S": null };
+
+
+    const columnMapping = {
+        'A': ['d4', 'd6'],
+        'B': ['d1', 'd2', 'd3'],
+        'C': ['d5', 'd7'],
+        'D': ['d4', 'd6'],
+        'E': ['d1', 'd2', 'd3'],
+        'F': ['d5', 'd7'],
+        'G': ['d4', 'd6'],
+        'H': ['d1', 'd2', 'd3'],
+        'I': ['d5', 'd7']
+    };
+
+    const rowMapping = {
+        'J': ['d1'],
+        'K': ['d4', 'd5'],
+        'L': ['d2'],
+        'M': ['d6', 'd7'],
+        'N': ['d3'],
+        'O': ['d1'],
+        'P': ['d4', 'd5'],
+        'Q': ['d2'],
+        'R': ['d6', 'd7'],
+        'S': ['d3']
+    };
+
+    const adjacentPairs = {
+        'T': ['U', 'W'],
+        'U': ['T', 'V', 'X'],
+        'V': ['U', 'W', 'Y'],
+        'W': ['V', 'T', 'X'],
+        'X': ['U', 'W', 'Y'],
+        'Y': ['V', 'X']
+    };
+
+    const usedNumbers = Array(10).fill(0);
+    for (let i = 0; i < 6; i++) {
+        let randomDigit;
+        do {
+            randomDigit = Math.floor(Math.random() * 10);
+        } while (
+            usedNumbers[randomDigit] === 2 ||
+            (i > 0 && hiddenDigits[i - 1] === randomDigit) ||
+            (i >= 3 && hiddenDigits[i - 3] === randomDigit)
+        );
+        hiddenDigits.push(randomDigit);
+        usedNumbers[randomDigit]++;
+    }
+
+    document.getElementById("generated-seed").style.display = "inline";
+    document.getElementById("generated-seed").innerText = "Seed: " + seed;
+
+    digitsVisible = true;
+    toggleVisibility();
+
+    document.getElementById("match-result").innerText = "";
+    document.getElementById("match-result").style.display = "hidden";
+
+    document.querySelectorAll('.digit span').forEach(span => span.classList.remove('on'));
+
+    function addHistoryEntry(text) {
+        questionCount++; // Increment question count
+
+        const historyPanel = document.getElementById('history-panel');
+        const entry = document.createElement('div');
+        entry.innerText = `Q${questionCount}: ${text}`; // Prefix question number
+        historyPanel.appendChild(entry);
+        historyPanel.scrollTop = historyPanel.scrollHeight; // Auto-scroll to latest entry
+    }
+
+    function addUniqueHistoryEntry(historyText, questionKey, placeholders = {}) {
+        const lang = localStorage.getItem("language") || "en";
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+
+        // Check if question was already asked
+        if (askedQuestions.has(historyText)) {
+            alert(translations[lang]["msg-duplicate-question"] || "You already asked this question!");
+            return; // Do not increase count or add duplicate
+        }
+
+        // Add question to set to prevent future duplicates
+        askedQuestions.add(historyText);
+
+        // Now increase count only for **new** questions
+        addHistoryEntry(historyText, questionKey, placeholders);
+
+        // Update and reveal `question-output`
+        const outputElement = document.getElementById("question-output");
+        outputElement.innerText = historyText;
+        outputElement.style.display = "block"; // Make it visible
+    }
+
+    function calculateFilledSpaces(letter) {
+        let count = 0;
+
+        hiddenDigits.forEach((digit, index) => {
+            let segments = digitSegments[digit];
+
+            if (columnMapping[letter] && index % 3 === Math.floor((letter.charCodeAt(0) - 65) / 3)) {
+                columnMapping[letter].forEach(segment => {
+                    if (segments.includes(segment)) count++;
+                });
+            }
+
+            if (rowMapping[letter]) {
+                const isUpperRow = index < 3;
+                const isLowerRow = index >= 3;
+                if ((isUpperRow && 'JKLMN'.includes(letter)) || (isLowerRow && 'OPQRS'.includes(letter))) {
+                    rowMapping[letter].forEach(segment => {
+                        if (segments.includes(segment)) count++;
+                    });
+                }
+            }
+        });
+
+        return count;
+    }
+
+    function changeLanguage(lang) {
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+
+        document.querySelectorAll("[id]").forEach(el => {
+            if (translations[lang][el.id]) {
+                if (el.id === "label-even-odd") {
+                    updateEvenOddLabel(lang);
+                } else if (el.id === "label-comparison") {
+                    updateComparisonLabel(lang);
+                } else if (el.id === "label-segment") {
+                    updateSegmentLabel(lang);
+                } else if (el.id === "label-how-many") {
+                    updateHowManyLabel(lang);
+                } else {
+                    el.textContent = translations[lang][el.id];
+                }
+            }
+        });
+
+        // Update all buttons that need translation
+        document.querySelectorAll(".btn-ask").forEach(btn => {
+            btn.textContent = translations[lang]["btn-ask"];
+        });
+
+        document.getElementById("btn-toggle-visibility").textContent = translations[lang]["btn-reveal"];
+
+        // Update Load button text dynamically
+        document.querySelector(".seed-container button").textContent = translations[lang]["btn-load"];
+
+        // Update input placeholder text
+        document.getElementById("user-input").setAttribute("placeholder", translations[lang]["user-input-placeholder"]);
+        document.getElementById("seed-input").setAttribute("placeholder", translations[lang]["seed-input-placeholder"]);
+
+        localStorage.setItem("language", lang);
+        document.documentElement.lang = lang;
+    }
+
+    function checkUserInput() {
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+        const lang = localStorage.getItem("language") || "en";
+        const userInput = document.getElementById("user-input").value;
+        const resultDisplay = document.getElementById("match-result");
+
+        if (!numberGenerated) {
+            alert(translations[lang]["msg-no-number"]);
+            return;
+        }
+
+        if (userInput.length !== 6 || isNaN(userInput)) {
+            alert(translations[lang]["msg-invalid-input"]); // Show alert instead of cutting off text
+            return;
+        }
+
+        if (userInput === hiddenDigits.join('')) {
+            resultDisplay.innerText = translations[lang]["msg-correct"];
+            resultDisplay.style.color = "yellow";
+        } else {
+            resultDisplay.innerText = translations[lang]["msg-wrong"];
+            resultDisplay.style.color = "red";
+        }
+    }
+
+    function clearSegments(digitId) {
+        document.querySelectorAll(`#${digitId} span`).forEach(span => span.classList.remove('on'));
+    }
+
+    function decodeBase62(str) {
+        let num = 0;
+
+        // Ignore the first 4 padding characters
+        const validPart = str.slice(-6); // Extract only the last 6 characters
+
+        for (let i = 0; i < validPart.length; i++) {
+            num = num * 62 + base62Chars.indexOf(validPart[i]);
+        }
+        return num;
+    }
+
+    function encodeBase62(num) {
+        let encoded = "";
+        while (num > 0) {
+            encoded = base62Chars[num % 62] + encoded;
+            num = Math.floor(num / 62);
+        }
+        return encoded.padStart(10, base62Chars[Math.floor(Math.random() * base62Chars.length)]); // Add random padding
+    }
+
+    function generateRandomDigitsWithRules() {
+        const lang = localStorage.getItem("language") || "en";
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+
+        if (numberGenerated) {
+            const confirmMessage = translations[lang]["msg-confirm-generate"];
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+        }
+
+        // Reset history when generating a new number
+        resetHistory();
+
+        // Hide digits properly before generating a new number
+        toggleVisibility(true); // Ensure all digits are hidden before generating
+
+        hiddenDigits = [];
+        numberGenerated = true;
+        setButtonsState(true);
+
+        const usedNumbers = Array(10).fill(0);
+        for (let i = 0; i < 6; i++) {
+            let randomDigit;
+            do {
+                randomDigit = Math.floor(Math.random() * 10);
+            } while (
+                usedNumbers[randomDigit] === 2 ||
+                (i > 0 && hiddenDigits[i - 1] === randomDigit) ||
+                (i >= 3 && hiddenDigits[i - 3] === randomDigit)
+            );
+            hiddenDigits.push(randomDigit);
+            usedNumbers[randomDigit]++;
+        }
+
+        let seed = generateSeedFromDigits(hiddenDigits);
+        document.getElementById("generated-seed").style.display = "inline";
+
+        if (!seed) {
+            console.error("Seed generation failed!");
+        } else {
+            document.getElementById("generated-seed").innerText = "Seed: " + seed;
+        }
+
+        // Show an alert confirming the seed was loaded
+        alert(`Seed "${seed}" was successfully loaded!`);
+
+        // Clear the seed input after loading
+        document.getElementById("seed-input").value = "";
+        document.getElementById("user-input").value = "";
+
+        // Ensure numbers stay hidden initially
+        toggleVisibility(true);
+    }
+
+    function generateSeedFromDigits(digits) {
+        if (digits.length !== 6) return null;
+
+        // **Step 1: Convert 6-digit array into a single large integer**
+        let combinedNumber = digits.reduce((acc, num, index) => acc * 10 + num, 0);
+
+        // **Step 2: Add a fixed offset**
+        combinedNumber += 9876543210;
+
+        // **Step 3: Convert to Base-62 Encoding**
+        seed = "";
+        let tempNumber = combinedNumber;
+        while (tempNumber > 0) {
+            let remainder = tempNumber % 62;
+            seed = base62Chars[remainder] + seed;
+            tempNumber = Math.floor(tempNumber / 62);
+        }
+
+        // **Step 4: Ensure the seed is always 10 characters long**
+        while (seed.length < 10) {
+            let randomChar = base62Chars[Math.floor(Math.random() * 62)];
+            seed = randomChar + seed;
+        }
+        let finalSeed = seed.slice(-10);
+  
+        return finalSeed;
+    }
+   
+    function handleHowManyQuestion() {
+        const lang = localStorage.getItem("language") || "en";
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+        const letter = document.getElementById('row-col-value').value;
+        const filledCount = calculateFilledSpaces(letter);
+
+
+
+        const historyText = translations[lang]["msg-answer-how-many"]
+            .replace("{letter}", letter)
+            .replace("{count}", filledCount);
+
+        addHistoryEntry(historyText);
+
+        document.getElementById('question-output').innerText = historyText;
+    }
+
+    function handleComparisonQuestion() {
+        const lang = localStorage.getItem("language") || "en";
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+        const selectedPair = document.getElementById("digit-pair").value;
+        const [firstDigit, secondDigit] = selectedPair.split("-");
+
+        const firstIndex = firstDigit.charCodeAt(0) - "T".charCodeAt(0);
+        const secondIndex = secondDigit.charCodeAt(0) - "T".charCodeAt(0);
+
+        let resultKey;
+        if (hiddenDigits[firstIndex] > hiddenDigits[secondIndex]) {
+            resultKey = "msg-first-greater";
+        } else if (hiddenDigits[firstIndex] < hiddenDigits[secondIndex]) {
+            resultKey = "msg-second-greater";
+        } else {
+            resultKey = "msg-generate-first";
+        }
+
+        const resultText = translations[lang][resultKey]
+            .replace("{firstDigit}", firstDigit)
+            .replace("{secondDigit}", secondDigit);
+
+        const historyText = translations[lang]["msg-comparison-history"]
+            .replace("{firstDigit}", firstDigit)
+            .replace("{secondDigit}", secondDigit)
+            .replace("{resultText}", resultText);
+
+        addUniqueHistoryEntry(historyText);
+    }
+
+    function handleDigitEvenOddQuestion() {
+        const lang = localStorage.getItem("language") || "en";
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+        const digitLetter = document.getElementById('digit-value').value;
+        const digitIndex = digitLetter.charCodeAt(0) - 'T'.charCodeAt(0);
+
+        if (digitIndex < 0 || digitIndex >= hiddenDigits.length) {
+            alert(translations[lang]["msg-invalid-input-error"]); // Use alert for invalid input
+            return;
+        }
+
+        const digit = hiddenDigits[digitIndex];
+        const parity = digit % 2 === 0 ? translations[lang]["msg-even"] : translations[lang]["msg-odd"];
+
+        const historyText = translations[lang]["msg-even-odd-history"]
+            .replace("{digitLetter}", digitLetter)
+            .replace("{parity}", parity);
+
+        addUniqueHistoryEntry(historyText);
+    }
+
+    function handleHowManyQuestion() {
+        const lang = localStorage.getItem("language") || "en";
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+        const letter = document.getElementById('row-col-value').value;
+        const filledCount = calculateFilledSpaces(letter);
+
+        const historyText = translations[lang]["msg-answer-how-many"]
+            .replace("{letter}", letter)
+            .replace("{count}", filledCount);
+
+        addUniqueHistoryEntry(historyText);
+    }
+
+    function handleSegmentFilledQuestion() {
+        const lang = localStorage.getItem("language") || "en";
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+        const column = document.getElementById('column-value').value;
+        const row = document.getElementById('row-value').value;
+
+        const result = isSegmentFilled(column, row);
+
+        const historyText = translations[lang]["msg-segment-history"]
+            .replace("{column}", column)
+            .replace("{row}", row)
+            .replace("{result}", result);
+
+        addUniqueHistoryEntry(historyText);
+    }
+
+    function hideDigits() {
+        if (!numberGenerated) return;
+
+        hiddenDigits.forEach((num, index) => {
+            const digitId = `digit-${index + 1}`;
+            clearSegments(digitId);
+        });
+    }
+
+    function isSegmentFilled(column, row) {
+        const lang = localStorage.getItem("language") || "en";
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+
+        const key = `${column}-${row}`;
+        const segment = segmentMatrix[key];
+
+        if (!segment) {
+            return translations[lang]["msg-invalid-selection"];
+        }
+
+        const digitIndex = "ABC".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 0 : 3) :
+            "DEF".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 1 : 4) :
+            "GHI".includes(column) ? (["J", "K", "L", "M", "N"].includes(row) ? 2 : 5) : -1;
+
+        if (digitIndex === -1) {
+            return translations[lang]["msg-invalid-selection"];
+        }
+
+        const digit = hiddenDigits[digitIndex];
+        const actualSegment = segment.split('-')[2];
+
+        const isFilled = digitSegments[digit].includes(actualSegment);
+        return isFilled ? translations[lang]["msg-segment-filled"] : translations[lang]["msg-segment-empty"];
+    }
+
+    function lightUpDigit(digitId, number) {
+        clearSegments(digitId);
+
+        if (!digitSegments[number]) {
+            console.error(`Invalid number passed to lightUpDigit: ${number}`);
+            return;
+        }
+
+        digitSegments[number].forEach(segment => {
+            let element = document.querySelector(`#${digitId} .${segment}`);
+            if (element) {
+                element.classList.add('on');
+            } else {
+                console.error(`Segment not found: ${segment} in ${digitId}`);
+            }
+        });
+    }
+
+    function loadDigitsFromSeed() {
+        const seed = document.getElementById("seed-input").value.trim();
+
+        if (!seed || seed.length !== 10) {
+            console.error("Invalid seed length:", seed);
+            alert("Seed invalid");
+            return;
+        }
+
+        // Reset history when loading a new number
+        resetHistory();
+
+        // Hide digits properly before loading a new number
+        toggleVisibility(true);
+
+        let combinedNumber = decodeBase62(seed);
+        combinedNumber -= 9876543210;
+
+        let digits = [];
+        while (combinedNumber > 0) {
+            digits.unshift(combinedNumber % 10);
+            combinedNumber = Math.floor(combinedNumber / 10);
+        }
+
+        if (digits.length !== 6) {
+            console.error("Incorrect number of digits extracted:", digits);
+            alert("Seed invalid");
+            return;
+        }
+
+        hiddenDigits = digits;
+        numberGenerated = true;
+        setButtonsState(true);
+        document.getElementById("match-result").innerText = "";
+
+        document.getElementById("generated-seed").innerText = "Seed: " + seed;
+        document.getElementById("generated-seed").style.display = "inline";
+
+        // Clear the seed input after loading
+        document.getElementById("seed-input").value = "";
+        document.getElementById("user-input").value = "";
+
+        // Show an alert confirming the seed was loaded
+        alert(`Seed "${seed}" was successfully loaded!`);
+
+        // Ensure numbers stay hidden initially
+        toggleVisibility(true);
+    }
+
+    function resetHistory() {
+        // Clear history panel
+        document.getElementById("history-panel").innerHTML = "";
+
+        // Reset question count
+        questionCount = 0;
+
+        // Clear previously asked questions
+        askedQuestions.clear();
+
+        // Hide previous question output
+        const outputElement = document.getElementById("question-output");
+        outputElement.innerText = "";
+        outputElement.style.display = "hidden";
+
+        // Reset the visibility state
+        document.getElementById("match-result").innerText = "";
+        document.getElementById("match-result").style.display = "hidden";
+
+        // Reset digits visibility
+        digitsVisible = false;
+    }
+
+    function revealDigits() {
+        if (!numberGenerated) return;
+
+        hiddenDigits.forEach((num, index) => {
+            lightUpDigit(`digit-${index + 1}`, num);
+        });
+    }
+
+    function setButtonsState(enabled) {
+        document.getElementById("btn-toggle-visibility").disabled = !enabled;
+        document.getElementById("btn-check").disabled = !enabled;
+        document.querySelectorAll(".btn-ask").forEach(btn => {
+            btn.disabled = !enabled;
+        });
+    }
+
+    function scrambleDigits(digits) {
+        return [digits[3], digits[1], digits[4], digits[0], digits[5], digits[2]]; // Rearrange order
+    }
+
+    function toggleVisibility(forceHide = false) {
+        if (!numberGenerated) return;
+
+        const toggleButton = document.getElementById("btn-toggle-visibility");
+        const lang = localStorage.getItem("language") || "en";
+
+        const revealText = translations[lang]["btn-reveal"];
+        const hideText = translations[lang]["btn-hide"];
+
+        if (forceHide || digitsVisible) {
+            // Hide all digits
+            document.querySelectorAll('.digit span').forEach(span => span.classList.remove('on'));
+            toggleButton.textContent = revealText;
+            digitsVisible = false;
+        } else {
+            // Ensure digits exist before revealing
+            if (!hiddenDigits || hiddenDigits.length === 0 || hiddenDigits.some(num => num === undefined)) {
+                console.error("Invalid hiddenDigits during toggle:", hiddenDigits);
+                return;
+            }
+
+            hiddenDigits.forEach((num, index) => {
+                if (num < 0 || num > 9 || isNaN(num)) {
+                    console.error(`Invalid number at index ${index}: ${num}`);
+                    return;
+                }
+                lightUpDigit(`digit-${index + 1}`, num);
+            });
+
+            toggleButton.textContent = hideText;
+            digitsVisible = true;
+        }
+    }
+
+    function unscrambleDigits(digits) {
+        return [digits[3], digits[1], digits[5], digits[0], digits[2], digits[4]]; // Reverse mapping
+    }
+
+    function updateEvenOddLabel(lang) {
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+        const digit = document.getElementById("digit-value").value;
+        document.getElementById("label-even-odd").textContent = translations[lang]["label-even-odd"].replace("{digit}", `(${digit})`);
+    }
+
+    function updateComparisonLabel(lang) {
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+        const pair = document.getElementById("digit-pair").value;
+        document.getElementById("label-comparison").textContent = translations[lang]["label-comparison"].replace("{pair}", pair);
+    }
+
+    function updateSecondDigitOptions() {
+        const firstDigit = document.getElementById('first-digit').value;
+        const secondDigitDropdown = document.getElementById('second-digit');
+        secondDigitDropdown.innerHTML = ''; // Clear previous options
+
+        adjacentPairs[firstDigit].forEach(adjacent => {
+            let option = document.createElement('option');
+            option.value = adjacent;
+            option.textContent = `(${adjacent})`;
+            secondDigitDropdown.appendChild(option);
+        });
+    }
+
+    function updateSegmentLabel(lang) {
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+        const column = document.getElementById("column-value").value;
+        const row = document.getElementById("row-value").value;
+        document.getElementById("label-segment").textContent = translations[lang]["label-segment"]
+            .replace("{column}", column)
+            .replace("{row}", row);
+    }
+
+    function updateHowManyLabel(lang) {
+        const translations = JSON.parse(document.getElementById('translations').textContent);
+        const selectedValue = document.getElementById("row-col-value").value;
+
+        // Adjust word order based on language
+        let formattedText;
+        if (lang === "en") {
+            formattedText = translations[lang]["label-how-many"].replace("{value}", selectedValue);
+        } else {
+            formattedText = translations[lang]["label-how-many"].replace("{value}", selectedValue);
+        }
+
+        document.getElementById("label-how-many").textContent = formattedText;
+    }
+
+    function updateRowOptions() {
+        const column = document.getElementById("column-value").value;
+        const rowSelect = document.getElementById("row-value");
+
+        // Iterate through row options and disable invalid ones
+        Array.from(rowSelect.options).forEach(option => {
+            const row = option.value;
+            const key = `${column}-${row}`;
+            option.disabled = !segmentMatrix[key]; // Disable if no valid segment
+        });
+
+        // Automatically select the first valid option
+        const firstValidOption = Array.from(rowSelect.options).find(option => !option.disabled);
+        if (firstValidOption) {
+            rowSelect.value = firstValidOption.value;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const translationsElement = document.getElementById("translations");
+        if (translationsElement) {
+            translations = JSON.parse(translationsElement.textContent); // Load translations
+        }
+
+        // Ensure the language is set correctly
+        const savedLang = localStorage.getItem("language") || "en";
+        changeLanguage(savedLang);
+
+        // Disable buttons initially
+        setButtonsState(false);
+
+        // Ensure visibility state starts correctly
+        digitsVisible = false;
+        document.getElementById("btn-toggle-visibility").textContent = translations[savedLang]["btn-reveal"];
+
+        // Run once at the beginning to initialize the valid row options
+        updateRowOptions();
+
+        // Attach event listeners for dynamic label updates
+        document.getElementById("column-value").addEventListener("change", () => {
+            const lang = localStorage.getItem("language") || "en";
+            updateRowOptions();
+            updateSegmentLabel(lang);
+        });
+
+        document.getElementById("row-value").addEventListener("change", () => {
+            const lang = localStorage.getItem("language") || "en";
+            updateSegmentLabel(lang);
+        });
+
+        document.getElementById("row-col-value").addEventListener("change", () => {
+            const lang = localStorage.getItem("language") || "en";
+            updateHowManyLabel(lang);
+        });
+
+        document.getElementById("digit-pair").addEventListener("change", () => {
+            const lang = localStorage.getItem("language") || "en";
+            updateComparisonLabel(lang);
+        });
+
+        document.getElementById("digit-value").addEventListener("change", () => {
+            const lang = localStorage.getItem("language") || "en";
+            updateEvenOddLabel(lang);
+        });
+    });
+
+
+
+    </script>
+</body>
+
 </html>
